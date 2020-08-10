@@ -20,6 +20,8 @@ router.post("/signup", (req, res) => {
     console.log(req.body)
 })
 
+app.use("/", router);
+
 MongoClient.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true }, function(err, client) {
     console.log("Connected successfully to server");
     db = client.db(DATABASE_NAME);
