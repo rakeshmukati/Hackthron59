@@ -13,10 +13,46 @@ const DATABASE_URL = "mongodb://uq2br62itgkczdy3ld7o:3ax10rxF8qHi5uciSyuF@bkj8bp
 const DATABASE_NAME = "bkj8bp4plc6eccf"
 
 router.post("/login", (req, res) => {
+    const password = md5(req.body.password)
+    db.collection("users").find({ email: req.body.email, password: password }).toArray(function(err, docs) {
+        if (docs.length == 0) {
+            res.send(JSON.stringify({
+                status: 200,
+                message: "You are logged in successfully"
+            }));
+        } else {
+            res.send(JSON.stringify({
+                status: 403,
+                message: "wrong email password."
+            }));
+        }
+    });
+
     console.log(req.body)
 })
 
 router.post("/signup", (req, res) => {
+    const password = md5(req.body.password)
+    db.collection("users").find({ email: req.body.email }).toArray(function(err, docs) {
+        if (docs.length == 0) {
+            db.collection("users").insertOne({
+                name: req.body.name,
+                email: req.body.email,
+                phone: req.body.phone,
+                password: password
+            });
+            res.send(JSON.stringify({
+                status: 1,
+                message: "account created"
+            }));
+        } else {
+            res.send(JSON.stringify({
+                status: 0,
+                message: "account created already exists."
+            }));
+        }
+    });
+
     console.log(req.body)
 })
 
