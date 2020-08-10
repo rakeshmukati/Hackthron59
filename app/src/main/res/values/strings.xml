@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Item Giveaway</string>
+    <string name="enter_email">enter email</string>
+    <string name="hint_enter_password">enter password</string>
+    <string name="login">LOGIN</string>
+    <string name="button_create_account">Not register yet? SignUp now</string>
+    <string name="hint_enter_name">enter name</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="already_have_an_account">Already have an account</string>
 </resources>

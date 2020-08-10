@@ -1,59 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/theme"
-    android:orientation="vertical"
-    android:gravity="center"
     tools:context=".activity.LoginActivity">
 
-
-         <EditText
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:padding="15dp"
-             android:hint="Email Id"
-             android:layout_margin="7dp"
-             android:drawableLeft="@drawable/ic_baseline_email_24"
-             android:drawablePadding="10dp"/>
-
-         <EditText
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:padding="15dp"
-             android:hint="Password"
-             android:layout_margin="7dp"
-             android:inputType="textPassword"
-             android:drawableLeft="@drawable/ic_key"
-             android:drawablePadding="10dp"/>
-
-          <LinearLayout
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:paddingStart="15dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="20dp">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/editEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="7dp"
+            android:drawableStart="@drawable/ic_baseline_email_24"
+            android:drawablePadding="5dp"
+            android:hint="@string/enter_email"
+            android:padding="15dp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/editPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="7dp"
+            android:drawableStart="@drawable/ic_key"
+            android:drawablePadding="5dp"
+            android:hint="@string/hint_enter_password"
+            android:inputType="textPassword"
+            android:padding="15dp" />
+
+        <LinearLayout
+            android:id="@+id/btnLogIn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_play"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="7dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_play"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:text="@string/login"
+                android:textColor="@color/colorPrimary"
+                android:textSize="21sp" />
+        </LinearLayout>
+
         <TextView
+            android:id="@+id/btnCreateAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="LOGIN"
-            android:layout_marginLeft="5dp"
-            android:textColor="@color/colorPrimary"
-            android:textSize="21sp"/>
+            android:layout_marginTop="5dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:layout_marginStart="7dp"
+            android:text="@string/button_create_account"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
     </LinearLayout>
-       <TextView
-           android:id="@+id/text_submit"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginTop="5dp"
-           android:text="Not Yet Account? SignUp"
-           android:textSize="18sp"
-           android:textColor="#000000"/>
-</LinearLayout>
+</ScrollView>

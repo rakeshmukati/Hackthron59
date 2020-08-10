@@ -1,0 +1,30 @@
+{
+    "name": "hackthron59",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "devStart": "nodemon index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/saurabhnamdev/Hackthron59.git"
+    },
+    "author": "Vijay Patidar",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/saurabhnamdev/Hackthron59/issues"
+    },
+    "homepage": "https://github.com/saurabhnamdev/Hackthron59#readme",
+    "dependencies": {
+        "body-parser": "^1.19.0",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "md5": "^2.2.1",
+        "mongodb": "^3.5.5"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.4"
+    }
+}

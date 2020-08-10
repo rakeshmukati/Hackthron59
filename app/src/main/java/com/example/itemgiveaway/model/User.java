@@ -1,22 +1,18 @@
 package com.example.itemgiveaway.model;
 
-public class userModel {
-    String name;
-    String email;
-    String password;
-    String number;
+public class User {
+    private String token;
+    private String name;
+    private String email;
+    private String number;
 
-    public userModel() {
+
+    public User() {
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public userModel(String name, String email, String password, String number, String token) {
+    public User(String name, String email, String password, String number, String token) {
         this.name = name;
         this.email = email;
-        this.password = password;
         this.number = number;
         this.token = token;
     }
@@ -29,16 +25,12 @@ public class userModel {
         return email;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getNumber() {
@@ -56,7 +48,5 @@ public class userModel {
     public void setToken(String token) {
         this.token = token;
     }
-
-    String token;
 
 }
