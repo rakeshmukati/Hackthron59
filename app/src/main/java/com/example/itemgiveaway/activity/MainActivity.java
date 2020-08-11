@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         }else {
             //todo user not logged in
         }
+
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

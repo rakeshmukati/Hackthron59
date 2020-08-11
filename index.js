@@ -15,8 +15,9 @@ const DATABASE_URL = "mongodb://uq2br62itgkczdy3ld7o:3ax10rxF8qHi5uciSyuF@bkj8bp
 const DATABASE_NAME = "bkj8bp4plc6eccf"
 
 router.post("/login", (req, res) => {
+    const email = req.body.email.toLowerCase();
     const password = md5(req.body.password)
-    db.collection("users").find({ email: req.body.email.toLowerCase(), password: password }).toArray(function(err, docs) {
+    db.collection("users").find({ email: email, password: password }).toArray(function(err, docs) {
         if (docs.length != 0) {
             //create user detail object from received information 
             const user = {
@@ -41,18 +42,28 @@ router.post("/login", (req, res) => {
 })
 
 router.post("/signup", (req, res) => {
-    const password = md5(req.body.password)
-    db.collection("users").find({ email: req.body.email }).toArray(function(err, docs) {
+    const email = req.body.email.toLowerCase();
+    const password = md5(req.body.password);
+
+    db.collection("users").find({ email: email }).toArray(function(err, docs) {
         if (docs.length == 0) {
             db.collection("users").insertOne({
                 name: req.body.name,
-                email: req.body.email.toLowerCase(),
+                email: email,
                 phone: req.body.phone,
                 password: password
             });
+            //create user detail object from received information 
+            const user = {
+                    name: req.body.name,
+                    email: email
+                }
+                //create token for loggedin user with JWT library
+            const acccessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
             res.send(JSON.stringify({
                 status: 200,
-                message: "account created"
+                message: "Account created successfully.",
+                accessToken: acccessToken
             }));
         } else {
             res.send(JSON.stringify({
