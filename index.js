@@ -1,7 +1,9 @@
+require("dotenv").config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const MongoClient = require('mongodb').MongoClient;
-var md5 = require('md5');
+const md5 = require('md5');
+const jwt = require('jsonwebtoken');
 
 var db;
 const router = express.Router();
@@ -16,10 +18,17 @@ router.post("/login", (req, res) => {
     const password = md5(req.body.password)
     db.collection("users").find({ email: req.body.email.toLowerCase(), password: password }).toArray(function(err, docs) {
         if (docs.length != 0) {
+            //create user detail object from received information 
+            const user = {
+                    name: docs[0].name,
+                    email: docs[0].email
+                }
+                //create token for loggedin user with JWT library
+            const acccessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
             res.send(JSON.stringify({
                 status: 200,
                 message: "You are logged in successfully",
-                accessToken: "this is access token for this login"
+                accessToken: acccessToken
             }));
         } else {
             res.send(JSON.stringify({
@@ -28,7 +37,6 @@ router.post("/login", (req, res) => {
             }));
         }
     });
-
     console.log(req.body)
 })
 
@@ -56,19 +64,49 @@ router.post("/signup", (req, res) => {
     console.log(req.body)
 })
 
-router.get("/donatedItem", (req, res) => {
-    db.collection("donatedItem").find({ email: req.body.email }).toArray(function(err, docs) {
+router.post("/user", authenticate, (req, res) => {
+    console.log("current user = ", req.body)
+    db.collection("users")
+        .find({ email: req.body.user.email.toLowerCase() })
+        .project({ password: 0, _id: 0 })
+        .toArray(function(err, docs) {
+            console.log("user detail ", docs[0])
+            if (docs.length != 0) {
+                res.send(JSON.stringify(docs[0]))
+            }
+        });
+})
+
+
+
+router.get("/donatedItems", (req, res) => {
+    db.collection("donatedItem").find().toArray(function(err, docs) {
         res.send(Json.stringify(docs))
     });
 })
 
-router.get("/requiredItem", (req, res) => {
-    db.collection("requiredItem").find({ email: req.body.email }).toArray(function(err, docs) {
+router.get("/requiredItems", (req, res) => {
+    db.collection("requiredItem").find().toArray(function(err, docs) {
         res.send(Json.stringify(docs))
     });
 })
 
 app.use("/", router);
+
+function authenticate(req, res, next) {
+    const headers = req.headers['authorization']
+    const token = headers && headers.split(' ')[1];
+    if (token == null) {
+        // user not authorised
+        return res.sendStatus(401)
+    }
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.body.user = user;
+        console.log("token = ", token, " user = ", user);
+        next();
+    });
+}
 
 MongoClient.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true }, function(err, client) {
     console.log("Connected successfully to server");
