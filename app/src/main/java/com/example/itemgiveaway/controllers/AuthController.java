@@ -6,6 +6,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.itemgiveaway.MyRequestQueue;
+import com.example.itemgiveaway.utils.AuthenticationManager;
 import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
@@ -17,7 +18,6 @@ public class AuthController {
 
     private static final String TAG = AuthController.class.getSimpleName();
     private AuthControllerListener authControllerListener;
-    private static String accessToken = null;
 
     public AuthController(AuthControllerListener authControllerListener) {
         this.authControllerListener = authControllerListener;
@@ -34,7 +34,7 @@ public class AuthController {
                             AuthResponse authResponse = new GsonBuilder().create().fromJson(response, AuthResponse.class);
                             if (authResponse.status == 200) {
                                 // init access token with JWT token sent from server
-                                accessToken = authResponse.accessToken;
+                                AuthenticationManager.getInstance().setAccessToken(authResponse.accessToken);
                                 authControllerListener.onAuthSuccess();
                             } else {
                                 authControllerListener.onAuthFailed(authResponse.message);
@@ -74,9 +74,6 @@ public class AuthController {
         void onAuthFailed(String msg);
     }
 
-    public static String getAccessToken() {
-        return accessToken;
-    }
 
     static class AuthResponse {
         int status;

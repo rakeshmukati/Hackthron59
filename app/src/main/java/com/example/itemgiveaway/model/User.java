@@ -1,10 +1,10 @@
 package com.example.itemgiveaway.model;
 
 public class User {
-    private String token;
     private String name;
     private String email;
     private String number;
+    private String token;
 
 
     public User() {
