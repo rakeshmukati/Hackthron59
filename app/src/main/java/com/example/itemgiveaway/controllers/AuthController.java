@@ -2,6 +2,7 @@ package com.example.itemgiveaway.controllers;
 
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -75,7 +76,7 @@ public class AuthController {
     }
 
 
-    static class AuthResponse {
+    public static class AuthResponse {
         int status;
         String message;
         String accessToken = null;

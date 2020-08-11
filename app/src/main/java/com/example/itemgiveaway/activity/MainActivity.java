@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (AuthenticationManager.getInstance().isAuthorised()){
+            //fetching user information
+            AuthenticationManager.getInstance().getCurrentUser(null);
             //todo user already logged in
         }else {
             //todo user not logged in

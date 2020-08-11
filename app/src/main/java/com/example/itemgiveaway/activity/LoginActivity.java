@@ -11,6 +11,8 @@ import androidx.appcompat.widget.AppCompatEditText;
 
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.controllers.AuthController;
+import com.example.itemgiveaway.model.User;
+import com.example.itemgiveaway.utils.AuthenticationManager;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, AuthController.AuthControllerListener {
 
