@@ -14,11 +14,12 @@ const DATABASE_NAME = "bkj8bp4plc6eccf"
 
 router.post("/login", (req, res) => {
     const password = md5(req.body.password)
-    db.collection("users").find({ email: req.body.email, password: password }).toArray(function(err, docs) {
-        if (docs.length == 0) {
+    db.collection("users").find({ email: req.body.email.toLowerCase(), password: password }).toArray(function(err, docs) {
+        if (docs.length != 0) {
             res.send(JSON.stringify({
                 status: 200,
-                message: "You are logged in successfully"
+                message: "You are logged in successfully",
+                accessToken: "this is access token for this login"
             }));
         } else {
             res.send(JSON.stringify({
@@ -37,23 +38,34 @@ router.post("/signup", (req, res) => {
         if (docs.length == 0) {
             db.collection("users").insertOne({
                 name: req.body.name,
-                email: req.body.email,
+                email: req.body.email.toLowerCase(),
                 phone: req.body.phone,
                 password: password
             });
             res.send(JSON.stringify({
-                status: 1,
+                status: 200,
                 message: "account created"
             }));
         } else {
             res.send(JSON.stringify({
-                status: 0,
-                message: "account created already exists."
+                status: 409,
+                message: "account already exists."
             }));
         }
     });
-
     console.log(req.body)
+})
+
+router.get("/donatedItem", (req, res) => {
+    db.collection("donatedItem").find({ email: req.body.email }).toArray(function(err, docs) {
+        res.send(Json.stringify(docs))
+    });
+})
+
+router.get("/requiredItem", (req, res) => {
+    db.collection("requiredItem").find({ email: req.body.email }).toArray(function(err, docs) {
+        res.send(Json.stringify(docs))
+    });
 })
 
 app.use("/", router);
