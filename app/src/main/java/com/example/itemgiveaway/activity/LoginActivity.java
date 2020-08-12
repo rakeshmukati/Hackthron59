@@ -53,9 +53,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 editEmail.setError("require!");
                 return;
             }
-            Log.d(TAG, "email = " + email);
-            Log.d(TAG, "password = " + password);
-
             controller.login(email, password);
         }
     }
@@ -63,6 +60,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onAuthSuccess() {
         Toast.makeText(this, "login success", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(LoginActivity.this,HomeActivity.class));
+        finish();
     }
 
     @Override

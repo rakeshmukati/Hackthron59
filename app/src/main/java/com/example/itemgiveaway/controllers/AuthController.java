@@ -2,7 +2,6 @@ package com.example.itemgiveaway.controllers;
 
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -64,9 +63,47 @@ public class AuthController {
         MyRequestQueue.getInstance().addRequest(stringRequest);
     }
 
-    public void createAccount(String name, String email, String phone, String password) {
+    public void createAccount(final String name, final String email, final String phone, final String password) {
         //todo implementation with volley
-        authControllerListener.onAuthSuccess();
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.POST,
+                BASE_URL + "signup",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, response);
+                        try {
+                            AuthResponse authResponse = new GsonBuilder().create().fromJson(response, AuthResponse.class);
+                            if (authResponse.status == 200) {
+                                // init access token with JWT token sent from server
+                                AuthenticationManager.getInstance().setAccessToken(authResponse.accessToken);
+                                authControllerListener.onAuthSuccess();
+                            } else {
+                                authControllerListener.onAuthFailed(authResponse.message);
+                            }
+                        } catch (Exception e) {
+                            authControllerListener.onAuthFailed(e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        authControllerListener.onAuthFailed(error.getMessage());
+                    }
+                }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> map = new HashMap<>();
+                map.put("name",name);
+                map.put("email", email);
+                map.put("password", password);
+                map.put("phone",phone);
+
+                return map;
+            }
+        };
+        MyRequestQueue.getInstance().addRequest(stringRequest);
     }
 
     public interface AuthControllerListener {
@@ -76,7 +113,7 @@ public class AuthController {
     }
 
 
-    public static class AuthResponse {
+    static class AuthResponse {
         int status;
         String message;
         String accessToken = null;

@@ -31,7 +31,6 @@ public class MyRequestQueue {
         return myRequestQueue;
     }
 
-
     public void addRequest(StringRequest stringRequest) {
         requestQueue.add(stringRequest);
     }

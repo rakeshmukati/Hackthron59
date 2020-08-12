@@ -6,7 +6,6 @@ public class User {
     private String number;
     private String token;
 
-
     public User() {
     }
 

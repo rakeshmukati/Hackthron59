@@ -80,6 +80,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     public void onAuthSuccess() {
         //todo start suitable activity
         Toast.makeText(this, "account created", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
+        finish();
     }
 
     @Override
