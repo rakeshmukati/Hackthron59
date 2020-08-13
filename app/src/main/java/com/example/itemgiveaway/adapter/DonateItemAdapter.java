@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.model.Item;
+import com.example.itemgiveaway.utils.ImageUtils;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,7 @@ public class DonateItemAdapter extends RecyclerView.Adapter<DonateItemAdapter.My
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final Item item = items.get(position);
         holder.itemName.setText(item.getItemName());
-        holder.itemImage.setImageResource(R.drawable.ic_about);
+        holder.itemImage.setImageBitmap(new ImageUtils().stringToBitmap(item.getPicture()));
     }
 
     @Override

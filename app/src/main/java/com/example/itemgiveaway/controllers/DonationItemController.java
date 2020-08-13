@@ -42,7 +42,7 @@ public class DonationItemController {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Log.d(TAG, "========================>"+response);
+                            Log.d(TAG, "========================>" + response);
                             try {
                                 Gson gson = new GsonBuilder().create();
                                 categories = new ArrayList<>();
@@ -101,20 +101,27 @@ public class DonationItemController {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d(TAG, response);
+                        Log.d(TAG, "================================>" + response);
                         items.add(item);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "================================>" + error);
                     }
                 }) {
             @Override
-            public byte[] getBody(){
+            public byte[] getBody() {
                 return new GsonBuilder().create().toJson(item).getBytes();
             }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
         };
+
         MyRequestQueue.getInstance().addRequest(stringRequest);
     }
 

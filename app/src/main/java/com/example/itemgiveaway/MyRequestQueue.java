@@ -6,6 +6,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
 public class MyRequestQueue {
@@ -15,7 +16,7 @@ public class MyRequestQueue {
     private RequestQueue requestQueue;
 
     private MyRequestQueue() {
-        Cache cache = new DiskBasedCache(App.context.getCacheDir(), 1024 * 1024); // 1MB cap
+        Cache cache = new DiskBasedCache(App.context.getCacheDir(), 1024 * 1024*3); // 1MB cap
         // Set up the network to use HttpURLConnection as the HTTP client.
         Network network = new BasicNetwork(new HurlStack());
         // Instantiate the RequestQueue with the cache and network.

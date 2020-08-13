@@ -5,6 +5,16 @@ public class Item {
     private String email,address,date, itemName;
     private int categoryId;
 
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    private String picture;
+
     public Item(String email, String address, String date, String itemName, int categoryId) {
         this.email = email;
         this.address = address;
