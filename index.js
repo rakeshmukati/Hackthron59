@@ -118,7 +118,7 @@ router.get("/categories", (req, res) => {
 
 router.get("/donatedItems", (req, res) => {
     db.collection("donatedItem").find().toArray(function(err, docs) {
-        res.send(Json.stringify(docs))
+        res.send(JSON.stringify(docs))
     });
 })
 
@@ -127,6 +127,10 @@ router.put("/donatedItem", (req, res) => {
     db.collection("donatedItem").insertOne(
         req.body
     );
+    res.send({
+        status: 200,
+        message: "Item added for donation"
+    })
 })
 
 
