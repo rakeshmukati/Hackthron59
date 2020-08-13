@@ -76,14 +76,40 @@ router.post("/signup", (req, res) => {
 })
 
 router.post("/user", authenticate, (req, res) => {
-    console.log("current user = ", req.body)
     db.collection("users")
         .find({ email: req.body.user.email.toLowerCase() })
         .project({ password: 0, _id: 0 })
         .toArray(function(err, docs) {
-            console.log("user detail ", docs[0])
             if (docs.length != 0) {
                 res.send(JSON.stringify(docs[0]))
+            }
+        });
+})
+
+// authenticate and send address 
+router.post("/address", authenticate, (req, res) => {
+    db.collection("users")
+        .find({ email: req.body.user.email.toLowerCase() })
+        .project({ address: 1 })
+        .toArray(function(err, docs) {
+            if (docs.length != 0) {
+                if (!docs[0].address) {
+                    res.send(JSON.stringify(docs[0].address))
+                } else {
+                    res.send("")
+                }
+
+            }
+        });
+})
+
+router.get("/categories", (req, res) => {
+    db.collection("categories")
+        .find()
+        .project({ _id: 0 })
+        .toArray(function(err, docs) {
+            if (docs.length != 0) {
+                res.send(JSON.stringify(docs))
             }
         });
 })
