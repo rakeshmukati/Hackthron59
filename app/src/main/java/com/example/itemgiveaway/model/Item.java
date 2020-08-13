@@ -2,14 +2,14 @@ package com.example.itemgiveaway.model;
 
 public class Item {
 
-    private String email,address,date,name;
+    private String email,address,date, itemName;
     private int categoryId;
 
-    public Item(String email, String address, String date, String name, int categoryId) {
+    public Item(String email, String address, String date, String itemName, int categoryId) {
         this.email = email;
         this.address = address;
         this.date = date;
-        this.name = name;
+        this.itemName = itemName;
         this.categoryId = categoryId;
     }
 
@@ -40,12 +40,12 @@ public class Item {
         this.date = date;
     }
 
-    public String getName() {
-        return name;
+    public String getItemName() {
+        return itemName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 
     public int getCategoryId() {

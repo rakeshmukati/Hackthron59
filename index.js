@@ -122,6 +122,14 @@ router.get("/donatedItems", (req, res) => {
     });
 })
 
+router.put("/donatedItem", (req, res) => {
+    console.log("add donatedItem " + req.body)
+    db.collection("donatedItem").insertOne(
+        req.body
+    );
+})
+
+
 router.get("/requiredItems", (req, res) => {
     db.collection("requiredItem").find().toArray(function(err, docs) {
         res.send(Json.stringify(docs))

@@ -5,8 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.model.Item;
 
 import java.util.ArrayList;
@@ -24,7 +27,8 @@ public class DonateItemAdapter extends RecyclerView.Adapter<DonateItemAdapter.My
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final Item item = items.get(position);
-
+        holder.itemName.setText(item.getItemName());
+        holder.itemImage.setImageResource(R.drawable.ic_about);
     }
 
     @Override
@@ -33,9 +37,12 @@ public class DonateItemAdapter extends RecyclerView.Adapter<DonateItemAdapter.My
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder{
-
+        AppCompatImageView itemImage;
+        AppCompatTextView itemName;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
+            itemImage = itemView.findViewById(R.id.image);
+            itemName = itemView.findViewById(R.id.name);
         }
     }
 

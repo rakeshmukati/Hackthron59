@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/rectangle"
     android:gravity="center"
     android:orientation="horizontal">
 
-
     <LinearLayout
         android:id="@+id/about"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
         android:clickable="true"
+        android:focusable="true"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:orientation="vertical">
@@ -23,7 +25,8 @@
             android:layout_width="match_parent"
             android:src="@drawable/ic_about"
             android:clickable="false"
-            android:layout_height="25dp" />
+            android:layout_height="25dp"
+            tools:ignore="ContentDescription" />
         <TextView
             android:clickable="false"
             android:layout_width="wrap_content"
@@ -34,10 +37,11 @@
 
     <LinearLayout
         android:id="@+id/chat"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:clickable="true"
+        android:focusable="true"
         android:gravity="center"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
@@ -58,11 +62,12 @@
 
     <LinearLayout
         android:id="@+id/donate"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
         android:clickable="true"
+        android:focusable="true"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:orientation="vertical">
@@ -82,11 +87,12 @@
 
     <LinearLayout
         android:id="@+id/needy"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
         android:clickable="true"
+        android:focusable="true"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:orientation="vertical">
@@ -106,11 +112,12 @@
 
     <LinearLayout
         android:id="@+id/account"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
         android:clickable="true"
+        android:focusable="true"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:orientation="vertical">
