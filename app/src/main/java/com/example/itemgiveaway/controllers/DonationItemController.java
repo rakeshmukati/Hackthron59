@@ -2,6 +2,7 @@ package com.example.itemgiveaway.controllers;
 
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -13,6 +14,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.example.itemgiveaway.MyRequestQueue.BASE_URL;
 
@@ -96,6 +99,7 @@ public class DonationItemController {
     }
 
     public void addItemForDonation(final Item item) {
+        final byte[] bytes = new GsonBuilder().create().toJson(item).getBytes();
         StringRequest stringRequest = new StringRequest(StringRequest.Method.PUT,
                 BASE_URL + "donatedItem",
                 new Response.Listener<String>() {
@@ -113,7 +117,14 @@ public class DonationItemController {
                 }) {
             @Override
             public byte[] getBody() {
-                return new GsonBuilder().create().toJson(item).getBytes();
+                return bytes;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("content-length",bytes.length+"");
+                return map;
             }
 
             @Override

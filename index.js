@@ -8,8 +8,8 @@ const jwt = require('jsonwebtoken');
 var db;
 const router = express.Router();
 const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '10240kb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10240kb' }));
 
 const DATABASE_URL = "mongodb://uq2br62itgkczdy3ld7o:3ax10rxF8qHi5uciSyuF@bkj8bp4plc6eccf-mongodb.services.clever-cloud.com:27017/bkj8bp4plc6eccf"
 const DATABASE_NAME = "bkj8bp4plc6eccf"
@@ -123,7 +123,7 @@ router.get("/donatedItems", (req, res) => {
 })
 
 router.put("/donatedItem", (req, res) => {
-    console.log("add donatedItem " + req.body)
+    console.log("add donatedItem " + JSON.stringify(req.body))
     db.collection("donatedItem").insertOne(
         req.body
     );
