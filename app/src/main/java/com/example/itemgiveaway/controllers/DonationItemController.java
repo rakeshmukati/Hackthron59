@@ -120,6 +120,7 @@ public class DonationItemController {
             public String getBodyContentType() {
                 return "application/json";
             }
+
         };
 
         MyRequestQueue.getInstance().addRequest(stringRequest);
@@ -132,5 +133,4 @@ public class DonationItemController {
     public interface OnDonatedItemListPreparesListener {
         void onItemListPrepared(ArrayList<Item> items);
     }
-
 }
