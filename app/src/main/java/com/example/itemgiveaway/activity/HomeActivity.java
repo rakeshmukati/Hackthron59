@@ -1,20 +1,21 @@
 package com.example.itemgiveaway.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.model.PagerView;
 
-public class HomeActivity extends AppCompatActivity {
-    LinearLayout about,donate,needy,chat,account;
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
+    LinearLayout about, donate, needy, chat, account;
     ViewPager viewPager;
     PagerView pagerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,43 +26,18 @@ public class HomeActivity extends AppCompatActivity {
         needy = findViewById(R.id.needy);
         chat = findViewById(R.id.chat);
         account = findViewById(R.id.account);
-        viewPager = (ViewPager)findViewById(R.id.fragment_control);
+        viewPager = (ViewPager) findViewById(R.id.fragment_control);
 
-        about.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(0);
-            }
-        });
-        chat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(1);
-            }
-        });
-        donate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(2);
-            }
-        });
-        needy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(3);
-            }
-        });
-        account.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(4);
-            }
-        });
+        about.setOnClickListener(this);
+        chat.setOnClickListener(this);
+        donate.setOnClickListener(this);
+        needy.setOnClickListener(this);
+        account.setOnClickListener(this);
 
         pagerView = new PagerView(getSupportFragmentManager());
         viewPager.setAdapter(pagerView);
         viewPager.setCurrentItem(2);
-        donate.setBackgroundColor(Color.parseColor("#03DAC5"));
+        onChangeTab(2);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -80,41 +56,43 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-    private void onChangeTab(int i){
-        if (i==0){
-            about.setBackgroundColor(Color.parseColor("#03DAC5"));
-            chat.setBackgroundColor(Color.parseColor("#ffffff"));
-            donate.setBackgroundColor(Color.parseColor("#ffffff"));
-            needy.setBackgroundColor(Color.parseColor("#ffffff"));
-            account.setBackgroundColor(Color.parseColor("#ffffff"));
+
+    private void onChangeTab(int i) {
+        String selectedColor = "#03DAC5";
+        String unselectedColor = "#FFFFFF";
+        about.setBackgroundColor(Color.parseColor(unselectedColor));
+        chat.setBackgroundColor(Color.parseColor(unselectedColor));
+        donate.setBackgroundColor(Color.parseColor(unselectedColor));
+        needy.setBackgroundColor(Color.parseColor(unselectedColor));
+        account.setBackgroundColor(Color.parseColor(unselectedColor));
+        if (i == 0) {
+            about.setBackgroundColor(Color.parseColor(selectedColor));
+        } else if (i == 1) {
+            chat.setBackgroundColor(Color.parseColor(selectedColor));
+        } else if (i == 2) {
+            donate.setBackgroundColor(Color.parseColor(selectedColor));
+        } else if (i == 3) {
+            needy.setBackgroundColor(Color.parseColor(selectedColor));
+        } else if (i == 4) {
+            account.setBackgroundColor(Color.parseColor(selectedColor));
         }
-       if(i==1){
-           about.setBackgroundColor(Color.parseColor("#ffffff"));
-           chat.setBackgroundColor(Color.parseColor("#03DAC5"));
-           donate.setBackgroundColor(Color.parseColor("#ffffff"));
-           needy.setBackgroundColor(Color.parseColor("#ffffff"));
-           account.setBackgroundColor(Color.parseColor("#ffffff"));
-       }
-       if (i==2){
-           about.setBackgroundColor(Color.parseColor("#ffffff"));
-           chat.setBackgroundColor(Color.parseColor("#ffffff"));
-           donate.setBackgroundColor(Color.parseColor("#03DAC5"));
-           needy.setBackgroundColor(Color.parseColor("#ffffff"));
-           account.setBackgroundColor(Color.parseColor("#ffffff"));
-       }
-        if(i==3){
-            about.setBackgroundColor(Color.parseColor("#ffffff"));
-            chat.setBackgroundColor(Color.parseColor("#ffffff"));
-            donate.setBackgroundColor(Color.parseColor("#ffffff"));
-            needy.setBackgroundColor(Color.parseColor("#03DAC5"));
-            account.setBackgroundColor(Color.parseColor("#ffffff"));
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        int selected;//default will be home
+        if (view == about) {
+            selected = 0;
+        } else if (view == chat) {
+            selected = 1;
+        } else if (view == donate) {
+            selected = 2;
+        } else if (view == needy) {
+            selected = 3;
+        } else {
+            selected = 4;
         }
-        if (i==4){
-            about.setBackgroundColor(Color.parseColor("#ffffff"));
-            chat.setBackgroundColor(Color.parseColor("#ffffff"));
-            donate.setBackgroundColor(Color.parseColor("#ffffff"));
-            needy.setBackgroundColor(Color.parseColor("#ffffff"));
-            account.setBackgroundColor(Color.parseColor("#03DAC5"));
-        }
+        viewPager.setCurrentItem(selected);
     }
 }

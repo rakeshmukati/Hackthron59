@@ -16,6 +16,7 @@
         android:id="@+id/email_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="none"
         android:drawableLeft="@drawable/ic_baseline_email_24"
         android:layout_marginHorizontal="10dp"/>
     <EditText

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-
-import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -13,7 +11,6 @@ import com.example.itemgiveaway.App;
 import com.example.itemgiveaway.MyRequestQueue;
 import com.example.itemgiveaway.model.User;
 import com.google.gson.GsonBuilder;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,6 +56,7 @@ public class AuthenticationManager {
                                 if (onUserCallbackListener != null)
                                     onUserCallbackListener.onUserDetailReceived(user);
                             } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                     },
@@ -70,8 +68,8 @@ public class AuthenticationManager {
                     }) {
 
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String, String> params = new HashMap<String, String>();
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
                     params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
                     return params;
                 }

@@ -1,9 +1,9 @@
 package com.example.itemgiveaway.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.utils.AuthenticationManager;
@@ -21,16 +21,15 @@ public class MainActivity extends AppCompatActivity {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                if (AuthenticationManager.getInstance().isAuthorised()){
+                if (AuthenticationManager.getInstance().isAuthorised()) {
                     //fetching user information
                     AuthenticationManager.getInstance().getCurrentUser(null);
-                    startActivity(new Intent(MainActivity.this,HomeActivity.class));
-                    //todo user already logged in
-                }else {
-                    //todo user not logged in
-                    startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                    startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                } else {
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 }
+                finish();
             }
-        },1500);
+        }, 1500);
     }
 }
