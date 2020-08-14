@@ -90,7 +90,7 @@ public class NeedyController {
     }
     public void addNeedyPerson(final NeedyItem item) {
         StringRequest stringRequest = new StringRequest(StringRequest.Method.PUT,
-                BASE_URL + "needypersons",
+                BASE_URL + "needyPersons",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

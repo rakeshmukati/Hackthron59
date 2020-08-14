@@ -134,10 +134,21 @@ router.put("/donatedItem", (req, res) => {
 })
 
 
-router.get("/requiredItems", (req, res) => {
-    db.collection("requiredItem").find().toArray(function(err, docs) {
+router.get("/needyPersons", (req, res) => {
+    db.collection("needyPersons").find().toArray(function(err, docs) {
         res.send(Json.stringify(docs))
     });
+})
+
+router.put("/needyPersons",(req, res) => {
+    console.log("add Needy " + req.body)
+    db.collection("needyPersons").insertOne(
+        req.body
+    );
+    res.send({
+        status: 200,
+        message: "Needy person added"
+    })
 })
 
 app.use("/", router);
