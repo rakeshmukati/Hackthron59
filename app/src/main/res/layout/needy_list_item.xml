@@ -20,46 +20,47 @@
             android:layout_height="200dp"
             android:orientation="vertical">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/needy_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:padding="8sp"
                 android:text="name surname"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/needy_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/needy_name"
-                android:padding="10dp"
+                android:padding="8sp"
                 android:text="Mobile Number" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/need_categori"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="NeedCategori"
-                android:padding="10dp"
+                android:padding="8sp"
                 android:layout_below="@+id/needy_number"
                 />
-
-            <TextView
-                android:id="@+id/address"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/need_categori"
-                android:text="Address"
-                android:padding="10dp"/>
-
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="130dp"
-                android:layout_height="130dp"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
                 android:layout_alignParentRight="true"
                 android:id="@+id/needy_image"
                 />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/need_categori"
+                android:text="Address"
+                android:padding="8sp"/>
+
+
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

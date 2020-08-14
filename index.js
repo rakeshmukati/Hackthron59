@@ -136,7 +136,7 @@ router.put("/donatedItem", (req, res) => {
 
 router.get("/needyPersons", (req, res) => {
     db.collection("needyPersons").find().toArray(function(err, docs) {
-        res.send(Json.stringify(docs))
+        res.send(JSON.stringify(docs))
     });
 })
 

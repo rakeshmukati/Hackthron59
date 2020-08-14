@@ -3,7 +3,6 @@ package com.example.itemgiveaway.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -30,9 +29,11 @@ public class NeedyPersonAdapter extends RecyclerView.Adapter<NeedyPersonAdapter.
         final NeedyItem item = items.get(position);
         holder.itemName.setText(item.getName());
         holder.itemImage.setImageBitmap(new ImageUtils().stringToBitmap(item.getPicture()));
-        holder.itemcategory.setText(item.getCategoryId());
+        holder.itemcategory.setText(item.getCategoryId()+"");
         holder.itemNumber.setText(item.getPhone());
-        holder.address.setText(item.getAddress());
+        String totalAddress=item.getAddress()+"\n"+item.getCity()+"\n"+item.getBlock()+" , "+item.getDistrict()+"\n"+item.getPostcode()+" , "+item.getState();
+
+        holder.address.setText(totalAddress);
     }
 
     @Override
