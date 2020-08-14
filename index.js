@@ -123,24 +123,13 @@ router.get("/donatedItems", (req, res) => {
 })
 
 router.put("/donatedItem", (req, res) => {
-    console.log("add donatedItem " + JSON.stringify(req.body))
+    console.log("add donatedItem " + req.body)
     db.collection("donatedItem").insertOne(
         req.body
     );
     res.send({
         status: 200,
         message: "Item added for donation"
-    })
-})
-
-router.put("/india", (req, res) => {
-    console.log("add india " + JSON.stringify(req.body))
-    db.collection("india").insertOne(
-        req.body
-    );
-    res.send({
-        status: 200,
-        message: "Item added"
     })
 })
 

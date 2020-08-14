@@ -1,40 +1,33 @@
 package com.example.itemgiveaway.controllers;
 
 import android.util.Log;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.itemgiveaway.MyRequestQueue;
-import com.example.itemgiveaway.interfaces.OnFailedListener;
-import com.example.itemgiveaway.interfaces.OnSuccessListener;
 import com.example.itemgiveaway.model.Category;
-import com.example.itemgiveaway.model.Item;
+import com.example.itemgiveaway.model.NeedyItem;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-
 import java.util.ArrayList;
-
 import static com.example.itemgiveaway.MyRequestQueue.BASE_URL;
 
-public class DonationItemController {
-    private static final String TAG = DonationItemController.class.getSimpleName();
-    private static DonationItemController controller = null;
+public class NeedyController {
+    private static final String TAG = NeedyController.class.getSimpleName();
+    private static NeedyController controller = null;
     private ArrayList<Category> categories = null;
-    private ArrayList<Item> items = null;
+    private ArrayList<NeedyItem> items = null;
 
-    private DonationItemController() {
-
+    public NeedyController() {
     }
 
-    public static synchronized DonationItemController getInstance() {
+    public static synchronized NeedyController getInstance() {
         if (controller == null) {
-            controller = new DonationItemController();
+            controller = new NeedyController();
         }
         return controller;
     }
-
     public void getCategories(final OnCategoriesListListener onCategoriesListListener) {
         if (categories != null) {
             onCategoriesListListener.onCategoriesListFetched(categories);
@@ -67,62 +60,53 @@ public class DonationItemController {
             MyRequestQueue.getInstance().addRequest(stringRequest);
         }
     }
-
-    public void getDonatedItemList(final OnDonatedItemListPreparesListener onDonatedItemListPreparesListener) {
-        if (items == null) {
-
-            StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
-                    BASE_URL + "donatedItems",
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            Log.d(TAG, response);
-                            try {
-                                Gson gson = new GsonBuilder().create();
-                                items = new ArrayList<>();
-                                JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
-                                for (int i = 0; i < jsonElements.size(); i++) {
-                                    items.add(gson.fromJson(jsonElements.get(i), Item.class));
-                                }
-                                onDonatedItemListPreparesListener.onItemListPrepared(items);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                        }
-                    }) {
-            };
-            MyRequestQueue.getInstance().addRequest(stringRequest);
-
-        } else {
-            onDonatedItemListPreparesListener.onItemListPrepared(items);
-        }
-    }
-
-    public void addItemForDonation(final Item item, final OnSuccessListener<Item> onSuccessListener, final OnFailedListener<String> onFailedListener) {
-        final byte[] bytes = new GsonBuilder().create().toJson(item).getBytes();
-        StringRequest stringRequest = new StringRequest(StringRequest.Method.PUT,
-                BASE_URL + "donatedItem",
+    public void getNeedyPersonList(final OnNeedyPersonListPreparesListener onNeedyPersonListPreparesListener) {
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
+                BASE_URL + "needyPersons",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        items.add(item);
-                        onSuccessListener.onSuccess(item);
+                        Log.d(TAG, response);
+                        try {
+                            Gson gson = new GsonBuilder().create();
+                            items = new ArrayList<>();
+                            JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
+                            for (int i = 0; i < jsonElements.size(); i++) {
+                                items.add(gson.fromJson(jsonElements.get(i), NeedyItem.class));
+                            }
+                            onNeedyPersonListPreparesListener.onNeedyItemListPrepared(items);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        onFailedListener.onFailed(error.getMessage());
+                    }
+                }) {
+        };
+        MyRequestQueue.getInstance().addRequest(stringRequest);
+    }
+    public void addNeedyPerson(final NeedyItem item) {
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.PUT,
+                BASE_URL + "needyPersons",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, "================================>" + response);
+                        items.add(item);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "================================>" + error);
                     }
                 }) {
             @Override
             public byte[] getBody() {
-                return bytes;
+                return new GsonBuilder().create().toJson(item).getBytes();
             }
 
             @Override
@@ -134,12 +118,11 @@ public class DonationItemController {
 
         MyRequestQueue.getInstance().addRequest(stringRequest);
     }
-
     public interface OnCategoriesListListener {
         void onCategoriesListFetched(ArrayList<Category> categories);
     }
 
-    public interface OnDonatedItemListPreparesListener {
-        void onItemListPrepared(ArrayList<Item> items);
+    public interface OnNeedyPersonListPreparesListener {
+        void onNeedyItemListPrepared(ArrayList<NeedyItem> items);
     }
 }
