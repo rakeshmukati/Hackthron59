@@ -29,6 +29,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.adapter.DonateItemAdapter;
 import com.example.itemgiveaway.controllers.DonationItemController;
+import com.example.itemgiveaway.interfaces.OnFailedListener;
+import com.example.itemgiveaway.interfaces.OnSuccessListener;
 import com.example.itemgiveaway.model.Category;
 import com.example.itemgiveaway.model.Item;
 import com.example.itemgiveaway.utils.ImageUtils;
@@ -138,9 +140,19 @@ public class DonateFragment extends Fragment implements DonationItemController.O
                 }
                 item.setItemName(itemName);
                 item.setPicture(new ImageUtils().viewToString(itemImage));
-                controller.addItemForDonation(item);
-                Log.d("","=================pic "+item.getPicture());
-                addDialog.cancel();
+                controller.addItemForDonation(item, new OnSuccessListener<Item>() {
+                    @Override
+                    public void onSuccess(Item item) {
+                        adapter.notifyDataSetChanged();
+                        addDialog.cancel();
+                        Toast.makeText(requireContext(),"Item added",Toast.LENGTH_SHORT).show();
+                    }
+                }, new OnFailedListener<String>() {
+                    @Override
+                    public void onFailed(String s) {
+                        Toast.makeText(requireContext(),"failed to add item for donation",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
