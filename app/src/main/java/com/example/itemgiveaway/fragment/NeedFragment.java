@@ -134,8 +134,9 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
             @Override
             public void onClick(View view) {
                 Log.d("", "==============================>" + ci[0]);
+                String number="null";
                 String itemName = itemNameEdit.getText().toString();
-                String number=itemNumberEdit.getText().toString();
+                 number=itemNumberEdit.getText().toString();
                String address=itemAddressEdit.getText().toString();
                 String city=itemcityEdit.getText().toString();
                 String District=itemdistrictEdit.getText().toString();
