@@ -130,7 +130,7 @@ router.put("/donatedItem", (req, res) => {
     res.send({
         status: 200,
         message: "Item added for donation"
-    })
+    });
 })
 
 
@@ -148,7 +148,7 @@ router.put("/needyPersons",(req, res) => {
     res.send({
         status: 200,
         message: "Needy person added"
-    })
+    });
 })
 
 app.use("/", router);
