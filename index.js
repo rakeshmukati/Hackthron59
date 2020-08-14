@@ -8,8 +8,8 @@ const jwt = require('jsonwebtoken');
 var db;
 const router = express.Router();
 const app = express();
-app.use(bodyParser.json({limit:'10mb'}));
-app.use(bodyParser.urlencoded({ extended: true,limit:'10mb' }));
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
 const DATABASE_URL = "mongodb://uq2br62itgkczdy3ld7o:3ax10rxF8qHi5uciSyuF@bkj8bp4plc6eccf-mongodb.services.clever-cloud.com:27017/bkj8bp4plc6eccf"
 const DATABASE_NAME = "bkj8bp4plc6eccf"
@@ -19,7 +19,7 @@ router.post("/login", (req, res) => {
     const password = md5(req.body.password)
     db.collection("users").find({ email: email, password: password }).toArray(function(err, docs) {
         if (docs.length != 0) {
-            //create user detail object from received information 
+            //create user detail object from received information
             const user = {
                     name: docs[0].name,
                     email: docs[0].email
@@ -53,7 +53,7 @@ router.post("/signup", (req, res) => {
                 phone: req.body.phone,
                 password: password
             });
-            //create user detail object from received information 
+            //create user detail object from received information
             const user = {
                     name: req.body.name,
                     email: email
@@ -86,7 +86,7 @@ router.post("/user", authenticate, (req, res) => {
         });
 })
 
-// authenticate and send address 
+// authenticate and send address
 router.post("/address", authenticate, (req, res) => {
     db.collection("users")
         .find({ email: req.body.user.email.toLowerCase() })
@@ -130,8 +130,9 @@ router.put("/donatedItem", (req, res) => {
     res.send({
         status: 200,
         message: "Item added for donation"
-    });
+    })
 })
+
 
 
 router.get("/needyPersons", (req, res) => {
@@ -140,7 +141,7 @@ router.get("/needyPersons", (req, res) => {
     });
 })
 
-router.put("/needyPersons",(req, res) => {
+router.put("/needyPersons", (req, res) => {
     console.log("add Needy " + req.body)
     db.collection("needyPersons").insertOne(
         req.body
@@ -150,7 +151,6 @@ router.put("/needyPersons",(req, res) => {
         message: "Needy person added"
     });
 })
-
 app.use("/", router);
 
 function authenticate(req, res, next) {
