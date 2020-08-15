@@ -2,7 +2,8 @@ package com.example.itemgiveaway.model;
 
 public class Item {
 
-    private String email,address,date, itemName;
+    private String email,streetAddress,date, itemName;
+    private long pinCode;
     private int categoryId;
 
     public String getPicture() {
@@ -15,13 +16,6 @@ public class Item {
 
     private String picture;
 
-    public Item(String email, String address, String date, String itemName, int categoryId) {
-        this.email = email;
-        this.address = address;
-        this.date = date;
-        this.itemName = itemName;
-        this.categoryId = categoryId;
-    }
 
     public Item() {
     }
@@ -34,12 +28,20 @@ public class Item {
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
+    public long getPinCode() {
+        return pinCode;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setPinCode(long pinCode) {
+        this.pinCode = pinCode;
+    }
+
+    public String getStreetAddress() {
+        return streetAddress;
+    }
+
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
     }
 
     public String getDate() {

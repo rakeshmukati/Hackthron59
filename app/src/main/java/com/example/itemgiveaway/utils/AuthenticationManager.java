@@ -19,9 +19,9 @@ import static com.example.itemgiveaway.MyRequestQueue.BASE_URL;
 public class AuthenticationManager {
     private static final String TAG = AuthenticationManager.class.getSimpleName();
     private static AuthenticationManager authenticationManager = null;
-
     private String accessToken;
     private User currentUser;
+
 
     private AuthenticationManager() {
         accessToken = App.context.getSharedPreferences("auth", Context.MODE_PRIVATE).getString("ACCESS_TOKEN", null);

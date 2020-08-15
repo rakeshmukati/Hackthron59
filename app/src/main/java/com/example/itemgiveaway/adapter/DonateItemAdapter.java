@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.itemgiveaway.R;
@@ -16,8 +17,12 @@ import com.example.itemgiveaway.utils.ImageUtils;
 import java.util.ArrayList;
 
 public class DonateItemAdapter extends RecyclerView.Adapter<DonateItemAdapter.MyViewHolder> {
-
+    private final onDonatedItemSelectListener onDonatedItemSelectListener;
     private final ArrayList<Item> items = new ArrayList<>();
+
+    public DonateItemAdapter(DonateItemAdapter.onDonatedItemSelectListener onDonatedItemSelectListener) {
+        this.onDonatedItemSelectListener = onDonatedItemSelectListener;
+    }
 
     @NonNull
     @Override
@@ -30,6 +35,12 @@ public class DonateItemAdapter extends RecyclerView.Adapter<DonateItemAdapter.My
         final Item item = items.get(position);
         holder.itemName.setText(item.getItemName());
         holder.itemImage.setImageBitmap(new ImageUtils().stringToBitmap(item.getPicture()));
+        holder.donateListItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onDonatedItemSelectListener.onItemSelected(item);
+            }
+        });
     }
 
     @Override
@@ -39,11 +50,13 @@ public class DonateItemAdapter extends RecyclerView.Adapter<DonateItemAdapter.My
 
     static class MyViewHolder extends RecyclerView.ViewHolder{
         AppCompatImageView itemImage;
+        CardView donateListItem;
         AppCompatTextView itemName;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             itemImage = itemView.findViewById(R.id.image);
             itemName = itemView.findViewById(R.id.name);
+            donateListItem = itemView.findViewById(R.id.donateListItem);
         }
     }
 
@@ -53,5 +66,9 @@ public class DonateItemAdapter extends RecyclerView.Adapter<DonateItemAdapter.My
             this.items.addAll(items);
             notifyDataSetChanged();
         }
+    }
+
+    public interface onDonatedItemSelectListener{
+        void onItemSelected(Item item);
     }
 }

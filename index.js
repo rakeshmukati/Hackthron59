@@ -116,11 +116,25 @@ router.get("/categories", (req, res) => {
 
 
 
-router.get("/donatedItems", (req, res) => {
+router.get("/donatedItems", authenticate, (req, res) => {
     db.collection("donatedItem").find().toArray(function(err, docs) {
         res.send(JSON.stringify(docs))
     });
 })
+
+router.post("/donorInfo", authenticate, (req, res) => {
+    if (req.body.email) {
+        db.collection("users")
+            .find({ email: req.body.email.toLowerCase() })
+            .project({ phone: 1, name: 1, _id: 0 })
+            .toArray(function(err, docs) {
+                if (docs.length != 0) {
+                    res.send(JSON.stringify(docs[0]))
+                }
+            });
+    }
+})
+
 
 router.put("/donatedItem", (req, res) => {
     console.log("add donatedItem " + req.body)

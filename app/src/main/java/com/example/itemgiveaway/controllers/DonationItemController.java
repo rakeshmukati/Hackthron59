@@ -10,11 +10,15 @@ import com.example.itemgiveaway.interfaces.OnFailedListener;
 import com.example.itemgiveaway.interfaces.OnSuccessListener;
 import com.example.itemgiveaway.model.Category;
 import com.example.itemgiveaway.model.Item;
+import com.example.itemgiveaway.model.User;
+import com.example.itemgiveaway.utils.AuthenticationManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.example.itemgiveaway.MyRequestQueue.BASE_URL;
 
@@ -23,6 +27,7 @@ public class DonationItemController {
     private static DonationItemController controller = null;
     private ArrayList<Category> categories = null;
     private ArrayList<Item> items = null;
+    private Gson gson = new GsonBuilder().create();
 
     private DonationItemController() {
 
@@ -46,7 +51,6 @@ public class DonationItemController {
                         public void onResponse(String response) {
                             Log.d(TAG, "========================>" + response);
                             try {
-                                Gson gson = new GsonBuilder().create();
                                 categories = new ArrayList<>();
                                 JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
                                 for (int i = 0; i < jsonElements.size(); i++) {
@@ -70,7 +74,6 @@ public class DonationItemController {
 
     public void getDonatedItemList(final OnDonatedItemListPreparesListener onDonatedItemListPreparesListener) {
         if (items == null) {
-
             StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
                     BASE_URL + "donatedItems",
                     new Response.Listener<String>() {
@@ -78,7 +81,6 @@ public class DonationItemController {
                         public void onResponse(String response) {
                             Log.d(TAG, response);
                             try {
-                                Gson gson = new GsonBuilder().create();
                                 items = new ArrayList<>();
                                 JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
                                 for (int i = 0; i < jsonElements.size(); i++) {
@@ -95,9 +97,14 @@ public class DonationItemController {
                         public void onErrorResponse(VolleyError error) {
                         }
                     }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
+                    return params;
+                }
             };
             MyRequestQueue.getInstance().addRequest(stringRequest);
-
         } else {
             onDonatedItemListPreparesListener.onItemListPrepared(items);
         }
@@ -126,12 +133,56 @@ public class DonationItemController {
             }
 
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
+                return params;
+            }
+
+            @Override
             public String getBodyContentType() {
                 return "application/json";
             }
-
         };
 
+        MyRequestQueue.getInstance().addRequest(stringRequest);
+    }
+
+    public void getDonnerInformation(final String email, final OnSuccessListener<User> onSuccessListener) {
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.POST,
+                BASE_URL + "donorInfo",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            Log.d("", "donor info " + response);
+                            onSuccessListener.onSuccess(gson.fromJson(response, User.class));
+                        } catch (Exception e) {
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
+                return params;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("email", email);
+                return params;
+            }
+        };
         MyRequestQueue.getInstance().addRequest(stringRequest);
     }
 

@@ -18,9 +18,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,14 +33,17 @@ import com.example.itemgiveaway.adapter.DonateItemAdapter;
 import com.example.itemgiveaway.controllers.DonationItemController;
 import com.example.itemgiveaway.interfaces.OnFailedListener;
 import com.example.itemgiveaway.interfaces.OnSuccessListener;
+import com.example.itemgiveaway.model.Address;
 import com.example.itemgiveaway.model.Category;
 import com.example.itemgiveaway.model.Item;
+import com.example.itemgiveaway.model.User;
+import com.example.itemgiveaway.utils.AuthenticationManager;
 import com.example.itemgiveaway.utils.ImageUtils;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class DonateFragment extends Fragment implements DonationItemController.OnDonatedItemListPreparesListener {
+public class DonateFragment extends Fragment implements DonationItemController.OnDonatedItemListPreparesListener, DonateItemAdapter.onDonatedItemSelectListener {
 
     private DonationItemController controller = DonationItemController.getInstance();
     private DonateItemAdapter adapter;
@@ -60,7 +65,7 @@ public class DonateFragment extends Fragment implements DonationItemController.O
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        adapter = new DonateItemAdapter();
+        adapter = new DonateItemAdapter(this);
         RecyclerView donateList = view.findViewById(R.id.donateList);
         donateList.setLayoutManager(new LinearLayoutManager(requireContext()));
         donateList.setItemAnimator(new DefaultItemAnimator());
@@ -88,6 +93,9 @@ public class DonateFragment extends Fragment implements DonationItemController.O
         final Item item = new Item();
         final AppCompatSpinner categoriesSpinner = view.findViewById(R.id.categoriesSpinner);
         final AppCompatEditText itemNameEdit = view.findViewById(R.id.name);
+        final AppCompatEditText pinCodeEdit = view.findViewById(R.id.pinCode);
+        final AppCompatEditText streetEdit = view.findViewById(R.id.street);
+        final View progressBar = view.findViewById(R.id.progressBar);
         itemImage = view.findViewById(R.id.image);
         itemImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,6 +134,8 @@ public class DonateFragment extends Fragment implements DonationItemController.O
             public void onClick(View view) {
                 Log.d("", "==============================>" + ci[0]);
                 String itemName = itemNameEdit.getText().toString();
+                String pincode = pinCodeEdit.getText().toString();
+                String street = streetEdit.getText().toString();
                 if (itemName.isEmpty()) {
                     itemNameEdit.setError("name require!");
                     return;
@@ -134,25 +144,49 @@ public class DonateFragment extends Fragment implements DonationItemController.O
                     Toast.makeText(requireContext(), "Please choose category", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!itemPicAdded){
+                if (!itemPicAdded) {
                     Toast.makeText(requireContext(), "Please choose item pic", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (pincode.isEmpty()) {
+                    pinCodeEdit.setError("name require!");
+                    return;
+                }
+                if (street.isEmpty()) {
+                    pinCodeEdit.setError("name require!");
+                    return;
+                }
                 item.setItemName(itemName);
+                item.setPinCode(Long.parseLong(pincode));
+                item.setStreetAddress(street);
                 item.setPicture(new ImageUtils().viewToString(itemImage));
+                progressBar.setVisibility(View.VISIBLE);
                 controller.addItemForDonation(item, new OnSuccessListener<Item>() {
                     @Override
                     public void onSuccess(Item item) {
-                        adapter.notifyDataSetChanged();
+                        controller.getDonatedItemList(DonateFragment.this);
                         addDialog.cancel();
-                        Toast.makeText(requireContext(),"Item added",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Item added", Toast.LENGTH_SHORT).show();
                     }
                 }, new OnFailedListener<String>() {
                     @Override
                     public void onFailed(String s) {
-                        Toast.makeText(requireContext(),"failed to add item for donation",Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(requireContext(), "failed to add item for donation", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
+
+        AuthenticationManager.getInstance().getCurrentUser(new AuthenticationManager.OnUserCallbackListener() {
+            @Override
+            public void onUserDetailReceived(User currentUser) {
+                Address address = currentUser.getAddress();
+                if (address != null) {
+                    pinCodeEdit.setText(new StringBuilder().append(address.getPinCode()));
+                    streetEdit.setText(address.getStreetAddress());
+                }
+                item.setEmail(currentUser.getEmail());
             }
         });
     }
@@ -175,5 +209,68 @@ public class DonateFragment extends Fragment implements DonationItemController.O
                 }
             }
         }
+    }
+
+    @Override
+    public void onItemSelected(Item item) {
+        showDetail(item);
+    }
+
+    private void showDetail(final Item item) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_donate_item_detail, null, false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+
+        AppCompatImageView itemPicture = view.findViewById(R.id.itemPicture);
+        itemPicture.setImageBitmap(new ImageUtils().stringToBitmap(item.getPicture()));
+
+        AppCompatTextView itemName = view.findViewById(R.id.itemName);
+        itemName.setText(item.getItemName());
+
+        final AppCompatTextView itemDonnerName = view.findViewById(R.id.itemdonatorName);
+        final AppCompatButton btnCallDonner = view.findViewById(R.id.btnCallDonor);
+
+        AppCompatTextView donnerAddress = view.findViewById(R.id.donorAddress);
+        donnerAddress.setText(item.getStreetAddress() + "," + item.getPinCode());
+
+        final AppCompatTextView itemCategory = view.findViewById(R.id.itemCategory);
+
+        controller.getCategories(new DonationItemController.OnCategoriesListListener() {
+            @Override
+            public void onCategoriesListFetched(ArrayList<Category> categories) {
+                for (Category category : categories) {
+                    if (category.getId() == item.getCategoryId()) {
+                        itemCategory.setText(category.getName());
+                        break;
+                    }
+                }
+            }
+        });
+
+        controller.getDonnerInformation(item.getEmail(), new OnSuccessListener<User>() {
+            @Override
+            public void onSuccess(final User user) {
+                itemDonnerName.setText(user.getName());
+                btnCallDonner.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + user.getNumber()));
+                        startActivity(Intent.createChooser(intent,"Call with"));
+                    }
+                });
+            }
+        });
+
+        view.findViewById(R.id.btnClose).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
+
+
     }
 }

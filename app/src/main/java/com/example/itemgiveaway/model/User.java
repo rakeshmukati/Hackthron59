@@ -5,6 +5,7 @@ public class User {
     private String email;
     private String number;
     private String token;
+    private Address address;
 
     public User() {
     }
@@ -48,4 +49,11 @@ public class User {
         this.token = token;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 }

@@ -64,7 +64,6 @@ public class AuthController {
     }
 
     public void createAccount(final String name, final String email, final String phone, final String password) {
-        //todo implementation with volley
         StringRequest stringRequest = new StringRequest(StringRequest.Method.POST,
                 BASE_URL + "signup",
                 new Response.Listener<String>() {
@@ -99,7 +98,6 @@ public class AuthController {
                 map.put("email", email);
                 map.put("password", password);
                 map.put("phone",phone);
-
                 return map;
             }
         };

@@ -94,7 +94,7 @@
                 android:hint="Block" />
 
             <EditText
-                android:id="@+id/pincode"
+                android:id="@+id/pinCode"
                 android:layout_width="match_parent"
                 android:paddingLeft="20dp"
                 android:paddingTop="10dp"
