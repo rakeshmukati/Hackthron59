@@ -118,6 +118,7 @@ public class NeedyController {
 
         MyRequestQueue.getInstance().addRequest(stringRequest);
     }
+
     public interface OnCategoriesListListener {
         void onCategoriesListFetched(ArrayList<Category> categories);
     }

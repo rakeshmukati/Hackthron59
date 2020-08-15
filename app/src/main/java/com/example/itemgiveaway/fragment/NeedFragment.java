@@ -30,12 +30,22 @@ import android.widget.Toast;
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.adapter.NeedyPersonAdapter;
 import com.example.itemgiveaway.controllers.NeedyController;
-import com.example.itemgiveaway.controllers.DonationItemController;
 import com.example.itemgiveaway.model.NeedyItem;
 import com.example.itemgiveaway.model.Category;
 import com.example.itemgiveaway.utils.ImageUtils;
+import com.example.itemgiveaway.services.LocationService;
 
+import android.content.DialogInterface;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
+import android.provider.Settings;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class NeedFragment extends Fragment implements NeedyController.OnNeedyPersonListPreparesListener {
@@ -191,12 +201,62 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
                 addDialog.cancel();
             }
         });
+
+        view.findViewById(R.id.location).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                LocationService locationService = new LocationService(requireContext());
+                Location location = locationService
+                        .getLocation(LocationManager.GPS_PROVIDER);
+                System.out.println(location);
+                if (location != null) {
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+                    Geocoder geocoder;
+                    List<Address> addresses = null;
+                    geocoder = new Geocoder(requireContext(), Locale.getDefault());
+
+                    try {
+                        addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //System.out.println("Data==========================="+city+"\n"+state+"\n"+country+"\n"+postalCode);
+                    itemAddressEdit.setText(addresses.get(0).getLocality());
+                    itemstateEdit.setText(addresses.get(0).getAdminArea());
+                    itempincodeEdit.setText(addresses.get(0).getPostalCode());
+                    itemcityEdit.setText(addresses.get(0).getSubLocality());
+                    System.out.println(addresses.get(0).getLocale()+"======"+addresses.get(0).getLocality()+"==="+addresses.get(0).getPostalCode()+"==="+addresses.get(0).getSubLocality());
+                } else {
+                    showSettingsAlert();
+                }
+            }
+        });
     }
     @Override
     public void onNeedyItemListPrepared(ArrayList<NeedyItem> items) {
         adapter.setItems(items);
     }
-
+    public void showSettingsAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                requireContext());
+        alertDialog.setTitle("SETTINGS");
+        alertDialog.setMessage("Enable Location Provider! Go to settings menu?");
+        alertDialog.setPositiveButton("Settings",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(
+                                Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        NeedFragment.this.startActivity(intent);
+                    }
+                });
+        alertDialog.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.show();
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
