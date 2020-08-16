@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,63 +7,97 @@
     android:orientation="vertical"
     tools:context=".fragment.AccountFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp">
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        tools:ignore="UselessParent">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/nameEdit"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_enter_name"
-            android:layout_marginHorizontal="10dp"
-            android:drawableStart="@drawable/ic_baseline_person_24" />
+            android:orientation="vertical"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/emailEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:drawableStart="@drawable/ic_baseline_email_24"
-            android:enabled="false"
-            android:inputType="none" />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/nameEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:drawableStart="@drawable/ic_baseline_person_24"
+                android:hint="@string/hint_enter_name" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/phoneEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:hint="@string/enter_phone_number"
-            android:drawableStart="@drawable/ic_baseline_phone_24" />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/emailEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:drawableStart="@drawable/ic_baseline_email_24"
+                android:enabled="false"
+                android:inputType="none" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/pinCodeEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:layout_marginHorizontal="10dp"
-            android:drawableStart="@drawable/ic_baseline_phone_24"
-            android:hint="@string/enter_pin_code" />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/phoneEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:drawableStart="@drawable/ic_baseline_phone_24"
+                android:hint="@string/enter_phone_number" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/streetAddressEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:drawableStart="@drawable/ic_baseline_phone_24"
-            android:hint="@string/enter_street_address" />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/pinCodeEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:drawableStart="@drawable/ic_baseline_phone_24"
+                android:hint="@string/enter_pin_code"
+                android:inputType="number" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnUpdateProfile"
-            android:layout_width="match_parent"
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/streetAddressEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:drawableStart="@drawable/ic_baseline_phone_24"
+                android:hint="@string/enter_street_address" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnUpdateProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/colorAccent"
+                android:text="@string/update_profile"
+                android:textColor="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/border_ring"
+                android:text="@string/logout"
+                android:foreground="?android:selectableItemBackground"
+                android:textColor="@color/colorAccent"
+                tools:ignore="UnusedAttribute" />
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/update_profile"
-            android:textColor="@color/white"
-            android:layout_marginTop="20dp"
-            android:layout_marginHorizontal="10dp"
-            android:background="@color/colorAccent"/>
-    </LinearLayout>
-</ScrollView>
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+</RelativeLayout>

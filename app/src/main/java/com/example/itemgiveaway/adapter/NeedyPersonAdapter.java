@@ -45,10 +45,10 @@ public class NeedyPersonAdapter extends RecyclerView.Adapter<NeedyPersonAdapter.
         AppCompatTextView itemName,itemNumber,itemcategory,address;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemImage = itemView.findViewById(R.id.needy_image);
+            itemImage = itemView.findViewById(R.id.needyProfilePicture);
             itemName = itemView.findViewById(R.id.needy_name);
             itemNumber =itemView.findViewById(R.id.needy_number);
-            itemcategory=itemView.findViewById(R.id.need_categori);
+            itemcategory=itemView.findViewById(R.id.needCategory);
             address=itemView.findViewById(R.id.address);
         }
     }

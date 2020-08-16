@@ -18,4 +18,7 @@
     <string name="donor_address">Donor Address</string>
     <string name="enter_phone_number">enter phone number</string>
     <string name="update_profile">update profile</string>
+    <string name="logout">Logout</string>
+    <string name="giveaway">GIVEAWAY</string>
+    <string name="search">Search</string>
 </resources>

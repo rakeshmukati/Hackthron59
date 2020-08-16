@@ -15,6 +15,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private final String TAG = getClass().getSimpleName();
     private AppCompatEditText editEmail, editPassword, editName, editPasswordConfirm, editPhone;
     private AuthController controller;
+    private View progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,13 +26,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initUI() {
-        findViewById(R.id.btnLogIn).setOnClickListener(this);
-        findViewById(R.id.btnCreateAccount).setOnClickListener(this);
+        progressBar = findViewById(R.id.progressBar);
         editName = findViewById(R.id.editName);
         editEmail = findViewById(R.id.editEmail);
         editPhone = findViewById(R.id.editPhone);
         editPassword = findViewById(R.id.editPassword);
         editPasswordConfirm = findViewById(R.id.editConfirmPassword);
+        findViewById(R.id.btnLogIn).setOnClickListener(this);
+        findViewById(R.id.btnCreateAccount).setOnClickListener(this);
     }
 
     @Override
@@ -73,12 +75,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             controller.createAccount(name, email, phone, password);
+            progressBar.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void onAuthSuccess() {
-        //todo start suitable activity
         Toast.makeText(this, "account created", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
         finish();
@@ -87,5 +89,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onAuthFailed(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        progressBar.setVisibility(View.GONE);
     }
 }

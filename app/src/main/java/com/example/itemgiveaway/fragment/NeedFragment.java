@@ -1,11 +1,26 @@
 package com.example.itemgiveaway.fragment;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,30 +32,13 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
-
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.adapter.NeedyPersonAdapter;
 import com.example.itemgiveaway.controllers.NeedyController;
-import com.example.itemgiveaway.model.NeedyItem;
 import com.example.itemgiveaway.model.Category;
-import com.example.itemgiveaway.utils.ImageUtils;
+import com.example.itemgiveaway.model.NeedyItem;
 import com.example.itemgiveaway.services.LocationService;
-
-import android.content.DialogInterface;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
-import android.provider.Settings;
+import com.example.itemgiveaway.utils.ImageUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,10 +52,12 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
     private NeedyPersonAdapter adapter;
     private AppCompatImageView itemImage = null;
     private boolean itemPicAdded = false;
+    private View progressBar;
 
     public NeedFragment() {
         // Required empty public constructor
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,10 +69,12 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_need, container, false);
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        progressBar = view.findViewById(R.id.progressBar);
         adapter = new NeedyPersonAdapter();
         RecyclerView needyList = view.findViewById(R.id.needyList);
         needyList.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -88,6 +90,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
             }
         });
     }
+
     private void addItemDialog() {
         itemPicAdded = false;
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -101,13 +104,13 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
         final AppCompatSpinner categoriesSpinner = view.findViewById(R.id.categoriesSpinner);
         final EditText itemNameEdit = view.findViewById(R.id.name);
         itemImage = view.findViewById(R.id.image);
-        final EditText itemNumberEdit=view.findViewById(R.id.number);
-        final EditText itemAddressEdit=view.findViewById(R.id.Address);
-        final EditText itemcityEdit=view.findViewById(R.id.city);
-        final EditText itemdistrictEdit=view.findViewById(R.id.district);
-        final EditText itemblockEdit=view.findViewById(R.id.block);
-        final EditText itemstateEdit=view.findViewById(R.id.state);
-        final EditText itempincodeEdit=view.findViewById(R.id.pinCode);
+        final EditText itemNumberEdit = view.findViewById(R.id.number);
+        final EditText itemAddressEdit = view.findViewById(R.id.Address);
+        final EditText itemcityEdit = view.findViewById(R.id.city);
+        final EditText itemdistrictEdit = view.findViewById(R.id.district);
+        final EditText itemblockEdit = view.findViewById(R.id.block);
+        final EditText itemstateEdit = view.findViewById(R.id.state);
+        final EditText itempincodeEdit = view.findViewById(R.id.pinCode);
         itemImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,38 +147,35 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
             @Override
             public void onClick(View view) {
                 Log.d("", "==============================>" + ci[0]);
-                String number="null";
+                String number = "null";
                 String itemName = itemNameEdit.getText().toString();
-                 number=itemNumberEdit.getText().toString();
-               String address=itemAddressEdit.getText().toString();
-                String city=itemcityEdit.getText().toString();
-                String District=itemdistrictEdit.getText().toString();
-                String block=itemblockEdit.getText().toString();
-                String pincode=itempincodeEdit.getText().toString();
-                String state=itemstateEdit.getText().toString();
+                number = itemNumberEdit.getText().toString();
+                String address = itemAddressEdit.getText().toString();
+                String city = itemcityEdit.getText().toString();
+                String District = itemdistrictEdit.getText().toString();
+                String block = itemblockEdit.getText().toString();
+                String pincode = itempincodeEdit.getText().toString();
+                String state = itemstateEdit.getText().toString();
 
                 if (itemName.isEmpty()) {
                     itemNameEdit.setError("require!");
                     return;
-                }
-                else if (address.isEmpty()) {
+                } else if (address.isEmpty()) {
                     itemAddressEdit.setError("require!");
                     return;
-                }
-                else if (city.isEmpty()) {
+                } else if (city.isEmpty()) {
                     itemcityEdit.setError("require!");
                     return;
-                }
-                else if (District.isEmpty()) {
+                } else if (District.isEmpty()) {
                     itemdistrictEdit.setError("require!");
                     return;
-                }else if (block.isEmpty()) {
+                } else if (block.isEmpty()) {
                     itemblockEdit.setError("require!");
                     return;
-                }else if (pincode.isEmpty()) {
+                } else if (pincode.isEmpty()) {
                     itempincodeEdit.setError("require!");
                     return;
-                }else if (state.isEmpty()) {
+                } else if (state.isEmpty()) {
                     itemstateEdit.setError("require!");
                     return;
                 }
@@ -183,7 +183,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
                     Toast.makeText(requireContext(), "Please choose category", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!itemPicAdded){
+                if (!itemPicAdded) {
                     Toast.makeText(requireContext(), "Please choose item pic", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -196,8 +196,8 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
                 item.setPostcode(pincode);
                 item.setState(state);
                 item.setPicture(new ImageUtils().viewToString(itemImage));
-                controller.addNeedyPerson (item);
-                Log.d("","=================pic "+item.getPicture());
+                controller.addNeedyPerson(item);
+                Log.d("", "=================pic " + item.getPicture());
                 addDialog.cancel();
             }
         });
@@ -225,17 +225,20 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
                     itemstateEdit.setText(addresses.get(0).getAdminArea());
                     itempincodeEdit.setText(addresses.get(0).getPostalCode());
                     itemcityEdit.setText(addresses.get(0).getSubLocality());
-                    System.out.println(addresses.get(0).getLocale()+"======"+addresses.get(0).getLocality()+"==="+addresses.get(0).getPostalCode()+"==="+addresses.get(0).getSubLocality());
+                    System.out.println(addresses.get(0).getLocale() + "======" + addresses.get(0).getLocality() + "===" + addresses.get(0).getPostalCode() + "===" + addresses.get(0).getSubLocality());
                 } else {
                     showSettingsAlert();
                 }
             }
         });
     }
+
     @Override
     public void onNeedyItemListPrepared(ArrayList<NeedyItem> items) {
         adapter.setItems(items);
+        progressBar.setVisibility(View.GONE);
     }
+
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(
                 requireContext());
@@ -257,6 +260,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
                 });
         alertDialog.show();
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

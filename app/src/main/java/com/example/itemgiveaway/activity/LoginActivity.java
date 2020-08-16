@@ -2,7 +2,6 @@ package com.example.itemgiveaway.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -11,14 +10,13 @@ import androidx.appcompat.widget.AppCompatEditText;
 
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.controllers.AuthController;
-import com.example.itemgiveaway.model.User;
-import com.example.itemgiveaway.utils.AuthenticationManager;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, AuthController.AuthControllerListener {
 
     private final String TAG = getClass().getSimpleName();
     private AppCompatEditText editEmail, editPassword;
     private AuthController controller;
+    private View progressBar;
 
 
     @Override
@@ -30,6 +28,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initUI() {
+        progressBar = findViewById(R.id.progressBar);
         editPassword = findViewById(R.id.editPassword);
         editEmail = findViewById(R.id.editEmail);
         findViewById(R.id.btnCreateAccount).setOnClickListener(this);
@@ -54,18 +53,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 return;
             }
             controller.login(email, password);
+            progressBar.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void onAuthSuccess() {
         Toast.makeText(this, "login success", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(LoginActivity.this,HomeActivity.class));
+        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
         finish();
     }
 
     @Override
     public void onAuthFailed(String msg) {
+        progressBar.setVisibility(View.GONE);
         Toast.makeText(this, "login failed! " + msg, Toast.LENGTH_SHORT).show();
     }
 }

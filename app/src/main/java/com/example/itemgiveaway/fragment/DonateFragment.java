@@ -52,6 +52,7 @@ public class DonateFragment extends Fragment implements DonationItemController.O
     private DonateItemAdapter adapter;
     private AppCompatImageView itemImage = null;
     private boolean itemPicAdded = false;
+    private View progressBar;
 
     public DonateFragment() {
         // Required empty public constructor
@@ -67,7 +68,7 @@ public class DonateFragment extends Fragment implements DonationItemController.O
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        progressBar = view.findViewById(R.id.progressBar);
         adapter = new DonateItemAdapter(this);
         RecyclerView donateList = view.findViewById(R.id.donateList);
         donateList.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -197,6 +198,7 @@ public class DonateFragment extends Fragment implements DonationItemController.O
     @Override
     public void onItemListPrepared(ArrayList<Item> items) {
         adapter.setItems(items);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override

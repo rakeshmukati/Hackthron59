@@ -1,5 +1,6 @@
 package com.example.itemgiveaway.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.itemgiveaway.R;
+import com.example.itemgiveaway.activity.LoginActivity;
 import com.example.itemgiveaway.interfaces.OnSuccessListener;
 import com.example.itemgiveaway.model.Address;
 import com.example.itemgiveaway.model.User;
@@ -45,6 +47,7 @@ public class AccountFragment extends Fragment {
         phoneEdit = view.findViewById(R.id.phoneEdit);
         pinCodeEdit = view.findViewById(R.id.pinCodeEdit);
         streetAddressEdit = view.findViewById(R.id.streetAddressEdit);
+        final View progressBar = view.findViewById(R.id.progressBar);
 
         AuthenticationManager.getInstance().getCurrentUser(new AuthenticationManager.OnUserCallbackListener() {
             @Override
@@ -61,6 +64,16 @@ public class AccountFragment extends Fragment {
             }
         });
 
+
+        view.findViewById(R.id.btnLogout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AuthenticationManager.getInstance().logout();
+                startActivity(new Intent(requireContext(), LoginActivity.class));
+                requireActivity().finish();
+            }
+        });
+
         view.findViewById(R.id.btnUpdateProfile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,18 +85,23 @@ public class AccountFragment extends Fragment {
 
                 if (name.length() == 0) {
                     nameEdit.setError("require!");
+                    return;
                 }
                 if (email.length() == 0) {
                     emailEdit.setError("require!");
+                    return;
                 }
                 if (phone.length() == 0) {
                     phoneEdit.setError("require!");
+                    return;
                 }
                 if (pinCode.length() == 0) {
                     pinCodeEdit.setError("require!");
+                    return;
                 }
                 if (streetAddress.length() == 0) {
                     streetAddressEdit.setError("require!");
+                    return;
                 }
 
                 user.setName(name);
@@ -93,13 +111,15 @@ public class AccountFragment extends Fragment {
                 address.setPinCode(Long.parseLong(pinCode));
                 address.setStreetAddress(streetAddress);
                 user.setAddress(address);
-
+                progressBar.setVisibility(View.VISIBLE);
                 AuthenticationManager.getInstance().updateUser(user, new OnSuccessListener<String>() {
                     @Override
                     public void onSuccess(String s) {
+                        progressBar.setVisibility(View.GONE);
                         Toast.makeText(requireContext(), "profile  updated", Toast.LENGTH_SHORT).show();
                     }
                 });
+
             }
         });
     }

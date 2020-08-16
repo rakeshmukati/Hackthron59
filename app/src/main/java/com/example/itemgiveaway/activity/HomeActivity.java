@@ -58,7 +58,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void onChangeTab(int i) {
-        String selectedColor = "#03DAC5";
+        String selectedColor = "#a2cf6e";
         String unselectedColor = "#FFFFFF";
         about.setBackgroundColor(Color.parseColor(unselectedColor));
         chat.setBackgroundColor(Color.parseColor(unselectedColor));
