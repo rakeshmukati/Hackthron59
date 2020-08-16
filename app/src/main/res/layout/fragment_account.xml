@@ -1,28 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".fragment.AccountFragment">
 
-    <EditText
-        android:id="@+id/name_edit"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_baseline_person_24"
-        android:layout_marginHorizontal="10dp"/>
-    <EditText
-        android:id="@+id/email_edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="none"
-        android:drawableLeft="@drawable/ic_baseline_email_24"
-        android:layout_marginHorizontal="10dp"/>
-    <EditText
-        android:id="@+id/phone_edit"
-        android:drawableLeft="@drawable/ic_baseline_phone_24"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"/>
-</LinearLayout>
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/nameEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_enter_name"
+            android:layout_marginHorizontal="10dp"
+            android:drawableStart="@drawable/ic_baseline_person_24" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/emailEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:drawableStart="@drawable/ic_baseline_email_24"
+            android:enabled="false"
+            android:inputType="none" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/phoneEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:hint="@string/enter_phone_number"
+            android:drawableStart="@drawable/ic_baseline_phone_24" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/pinCodeEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginHorizontal="10dp"
+            android:drawableStart="@drawable/ic_baseline_phone_24"
+            android:hint="@string/enter_pin_code" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/streetAddressEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:drawableStart="@drawable/ic_baseline_phone_24"
+            android:hint="@string/enter_street_address" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnUpdateProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/update_profile"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@color/colorAccent"/>
+    </LinearLayout>
+</ScrollView>

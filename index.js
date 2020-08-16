@@ -86,6 +86,33 @@ router.post("/user", authenticate, (req, res) => {
         });
 })
 
+router.put("/updateUser", authenticate, (req, res) => {
+    if (req.body.user.email == req.body.email) {
+        console.log(req.body)
+        var query = { email: req.body.user.email };
+        var data = req.body;
+        var name = data.name;
+        var phone = data.phone;
+        var address = data.address;
+
+        if (name == null || address == null || phone == null) {
+            return res.sendStatus(403)
+        }
+
+        db.collection("users").updateOne(query, { $set: { name: name, phone: phone, address: address } }, function(err, result) {
+            if (err) return res.sendStatus(503);
+            console.log("1 document updated");
+            res.send(JSON.stringify({
+                status: 200,
+                message: "Profile updated successfully"
+            }))
+        });
+    } else {
+        res.sendStatus(403)
+    }
+})
+
+
 // authenticate and send address
 router.post("/address", authenticate, (req, res) => {
     db.collection("users")

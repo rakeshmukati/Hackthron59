@@ -1,8 +1,12 @@
 package com.example.itemgiveaway.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Item {
 
-    private String email,streetAddress,date, itemName;
+    @SerializedName("_id")
+    private String id;
+    private String email, streetAddress, date, itemName;
     private long pinCode;
     private int categoryId;
 

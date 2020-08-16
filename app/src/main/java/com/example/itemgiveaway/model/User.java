@@ -3,17 +3,17 @@ package com.example.itemgiveaway.model;
 public class User {
     private String name;
     private String email;
-    private String number;
+    private String phone;
     private String token;
     private Address address;
 
     public User() {
     }
 
-    public User(String name, String email, String password, String number, String token) {
+    public User(String name, String email, String phone, String token) {
         this.name = name;
         this.email = email;
-        this.number = number;
+        this.phone = phone;
         this.token = token;
     }
 
@@ -33,12 +33,12 @@ public class User {
         this.email = email;
     }
 
-    public String getNumber() {
-        return number;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getToken() {

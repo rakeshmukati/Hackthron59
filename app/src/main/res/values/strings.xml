@@ -16,4 +16,6 @@
     <string name="enter_street_address">enter street address</string>
     <string name="please_wait">please wait…</string>
     <string name="donor_address">Donor Address</string>
+    <string name="enter_phone_number">enter phone number</string>
+    <string name="update_profile">update profile</string>
 </resources>

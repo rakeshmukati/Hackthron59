@@ -1,8 +1,10 @@
 package com.example.itemgiveaway.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -23,6 +25,7 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -236,6 +239,8 @@ public class DonateFragment extends Fragment implements DonationItemController.O
         AppCompatTextView donnerAddress = view.findViewById(R.id.donorAddress);
         donnerAddress.setText(item.getStreetAddress() + "," + item.getPinCode());
 
+        final View progressBar = view.findViewById(R.id.progressBar);
+
         final AppCompatTextView itemCategory = view.findViewById(R.id.itemCategory);
 
         controller.getCategories(new DonationItemController.OnCategoriesListListener() {
@@ -257,10 +262,17 @@ public class DonateFragment extends Fragment implements DonationItemController.O
                 btnCallDonner.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + user.getNumber()));
-                        startActivity(Intent.createChooser(intent,"Call with"));
+                        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + user.getPhone()));
+                            startActivity(intent);
+                        } else {
+                            ActivityCompat.requestPermissions(requireActivity(), new String[]{
+                                    Manifest.permission.CALL_PHONE
+                            }, 101);
+                        }
                     }
                 });
+                progressBar.setVisibility(View.GONE);
             }
         });
 

@@ -4,13 +4,16 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.itemgiveaway.App;
 import com.example.itemgiveaway.MyRequestQueue;
+import com.example.itemgiveaway.interfaces.OnSuccessListener;
 import com.example.itemgiveaway.model.User;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,6 +92,49 @@ public class AuthenticationManager {
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
         App.context.getSharedPreferences("auth", Context.MODE_PRIVATE).edit().putString("ACCESS_TOKEN", this.accessToken).apply();
+    }
+
+    public void updateUser(final User user, final OnSuccessListener<String> onSuccessListener) {
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.PUT,
+                BASE_URL + "updateUser",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, response);
+                        try {
+                            JsonObject res = new GsonBuilder().create().fromJson(response,JsonObject.class);
+                            if (onSuccessListener != null)
+                                onSuccessListener.onSuccess("Profile updated");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
+                return params;
+            }
+
+            @Override
+            public byte[] getBody() {
+                return new GsonBuilder().create().toJson(user).getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
+        MyRequestQueue.getInstance().addRequest(stringRequest);
     }
 
     public interface OnUserCallbackListener {
