@@ -21,4 +21,5 @@
     <string name="logout">Logout</string>
     <string name="giveaway">GIVEAWAY</string>
     <string name="search">Search</string>
+    <string name="enter_description">Enter Description</string>
 </resources>
