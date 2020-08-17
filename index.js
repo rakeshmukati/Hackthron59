@@ -193,9 +193,7 @@ router.put("/postUser", authenticate, (req, res) => {
 
 router.get("/postUser", authenticate, (req, res) => {
     db.collection("postUser").find().toArray(function(err, docs) {
-        if (docs.length != 0) {
-            res.send(JSON.stringify(docs))
-        }
+        res.send(JSON.stringify(docs))
     });
 })
 
