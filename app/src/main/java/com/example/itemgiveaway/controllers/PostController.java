@@ -81,11 +81,11 @@ public class PostController {
     public void getPost(final OnSuccessListener<ArrayList<Post>> onSuccessListener) {
         if (items == null) {
             StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
-                    BASE_URL + "donatedItems",
+                    BASE_URL + "postUser",
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Log.d(TAG, response);
+                            Log.d(TAG,"==================================="+ response);
                             try {
                                 items = new ArrayList<>();
                                 JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
@@ -101,6 +101,7 @@ public class PostController {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            Log.d("TEST",error.getMessage());
                         }
                     }) {
                 @Override

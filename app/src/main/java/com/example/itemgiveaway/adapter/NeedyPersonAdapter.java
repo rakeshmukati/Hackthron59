@@ -24,7 +24,7 @@ import com.example.itemgiveaway.utils.ImageUtils;
 import java.util.ArrayList;
 
 public class NeedyPersonAdapter extends RecyclerView.Adapter<NeedyPersonAdapter.MyViewHolder> {
-    private final ArrayList<NeedyItem> items = new ArrayList<>();
+    private  ArrayList<NeedyItem> items = new ArrayList<>();
 
 
     @NonNull
@@ -95,10 +95,7 @@ public class NeedyPersonAdapter extends RecyclerView.Adapter<NeedyPersonAdapter.
     }
 
     public void setItems(ArrayList<NeedyItem> items) {
-        synchronized (this.items) {
-            this.items.clear();
-            this.items.addAll(items);
-            notifyDataSetChanged();
-        }
+        this.items = items;
+        notifyDataSetChanged();
     }
 }

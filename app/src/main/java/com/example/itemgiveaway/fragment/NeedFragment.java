@@ -37,7 +37,6 @@ import com.example.itemgiveaway.interfaces.OnFailedListener;
 import com.example.itemgiveaway.interfaces.OnSuccessListener;
 import com.example.itemgiveaway.model.Category;
 import com.example.itemgiveaway.model.NeedyItem;
-import com.example.itemgiveaway.services.LocationService;
 import com.example.itemgiveaway.utils.ImageUtils;
 import com.google.android.gms.maps.model.LatLng;
 

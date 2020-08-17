@@ -31,18 +31,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
 
         final String picture = post.getPicture();
         if (picture == null || picture.length() == 0) {
+            holder.postPicture.setVisibility(View.GONE);
+        } else {
             holder.postPicture.setImageBitmap(imageUtils.stringToBitmap(picture));
             holder.postPicture.setVisibility(View.VISIBLE);
-        } else {
-            holder.postPicture.setVisibility(View.GONE);
         }
 
         final String text = post.getText();
         if (text == null || text.length() == 0) {
+            holder.postText.setVisibility(View.GONE);
+        } else {
             holder.postText.setText(text);
             holder.postText.setVisibility(View.VISIBLE);
-        } else {
-            holder.postText.setVisibility(View.GONE);
         }
 
         String description = post.getDescription();

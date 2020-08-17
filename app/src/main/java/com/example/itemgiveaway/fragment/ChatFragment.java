@@ -41,6 +41,7 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
     private PostAdapter adapter;
     private PostController controller = PostController.getInstance();
     String value = null;
+    private View progressBar;
 
     public ChatFragment() {
     }
@@ -59,6 +60,8 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        progressBar = view.findViewById(R.id.progressBar);
         RecyclerView postRecyclerView = view.findViewById(R.id.postRecyclerView);
         adapter = new PostAdapter();
         postRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -95,10 +98,10 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 value = (i == R.id.radio_text ? "TEXT" : "IMAGE");
-                if (value == "TEXT") {
+                if (value.equals("TEXT")) {
                     dialogText.setVisibility(View.VISIBLE);
                     dialogImage.setVisibility(View.GONE);
-                } else if (value == "IMAGE") {
+                } else {
                     dialogText.setVisibility(View.GONE);
                     dialogImage.setVisibility(View.VISIBLE);
                 }
@@ -125,7 +128,7 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
                     dialogTitle.setError("name require!");
                     return;
                 }
-                if (value == "IMAGE") {
+                if (value.equals("IMAGE")) {
                     post.setPicture(new ImageUtils().viewToString(dialogImage));
                 } else {
                     post.setText(text);
@@ -138,6 +141,7 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
                     @Override
                     public void onSuccess(Post post) {
                         addDialog.cancel();
+                        adapter.notifyDataSetChanged();
                         Toast.makeText(requireContext(), "Post Success", Toast.LENGTH_SHORT).show();
                     }
                 }, new OnFailedListener<String>() {
@@ -176,5 +180,6 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
     @Override
     public void onSuccess(ArrayList<Post> posts) {
         adapter.setItems(posts);
+        progressBar.setVisibility(View.GONE);
     }
 }
