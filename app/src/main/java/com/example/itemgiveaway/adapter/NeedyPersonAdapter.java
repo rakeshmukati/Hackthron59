@@ -16,6 +16,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.itemgiveaway.R;
+import com.example.itemgiveaway.controllers.CategoryController;
+import com.example.itemgiveaway.model.Category;
 import com.example.itemgiveaway.model.NeedyItem;
 import com.example.itemgiveaway.utils.ImageUtils;
 
@@ -32,11 +34,20 @@ public class NeedyPersonAdapter extends RecyclerView.Adapter<NeedyPersonAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         final NeedyItem item = items.get(position);
         holder.itemName.setText(item.getName());
         holder.itemImage.setImageBitmap(new ImageUtils().stringToBitmap(item.getPicture()));
-        holder.itemcategory.setText(item.getCategoryId() + "");
+        CategoryController.getInstance().getCategories(new CategoryController.OnCategoriesListListener() {
+            @Override
+            public void onCategoriesListFetched(ArrayList<Category> categories) {
+                for (Category category : categories) {
+                    if (category.getId() == item.getCategoryId()) {
+                        holder.itemcategory.setText(category.getName());
+                    }
+                }
+            }
+        });
         final String phone = item.getPhone();
         if (phone == null || phone.length() == 0) {
             holder.itemNumber.setVisibility(View.GONE);

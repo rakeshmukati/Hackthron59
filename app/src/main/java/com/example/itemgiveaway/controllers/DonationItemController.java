@@ -2,6 +2,8 @@ package com.example.itemgiveaway.controllers;
 
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -25,7 +27,6 @@ import static com.example.itemgiveaway.MyRequestQueue.BASE_URL;
 public class DonationItemController {
     private static final String TAG = DonationItemController.class.getSimpleName();
     private static DonationItemController controller = null;
-    private ArrayList<Category> categories = null;
     private ArrayList<Item> items = null;
     private Gson gson = new GsonBuilder().create();
 
@@ -40,37 +41,6 @@ public class DonationItemController {
         return controller;
     }
 
-    public void getCategories(final OnCategoriesListListener onCategoriesListListener) {
-        if (categories != null) {
-            onCategoriesListListener.onCategoriesListFetched(categories);
-        } else {
-            StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
-                    BASE_URL + "categories",
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            Log.d(TAG, "========================>" + response);
-                            try {
-                                categories = new ArrayList<>();
-                                JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
-                                for (int i = 0; i < jsonElements.size(); i++) {
-                                    categories.add(gson.fromJson(jsonElements.get(i), Category.class));
-                                }
-                                onCategoriesListListener.onCategoriesListFetched(categories);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                        }
-                    }) {
-            };
-            MyRequestQueue.getInstance().addRequest(stringRequest);
-        }
-    }
 
     public void getDonatedItemList(final OnDonatedItemListPreparesListener onDonatedItemListPreparesListener) {
         if (items == null) {
@@ -186,9 +156,45 @@ public class DonationItemController {
         MyRequestQueue.getInstance().addRequest(stringRequest);
     }
 
-    public interface OnCategoriesListListener {
-        void onCategoriesListFetched(ArrayList<Category> categories);
+    public void deleteItem(final Item item, final OnSuccessListener<Item> onSuccessListener, final OnFailedListener<String> onFailedListener) {
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.DELETE,
+                BASE_URL + "donatedItem",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        items.remove(item);
+                        onSuccessListener.onSuccess(item);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        onFailedListener.onFailed(error.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> map = new HashMap<>();
+                map.put("ID",item.getId());
+                return map;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
+                return params;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
+
+        MyRequestQueue.getInstance().addRequest(stringRequest);
     }
+
 
     public interface OnDonatedItemListPreparesListener {
         void onItemListPrepared(ArrayList<Item> items);

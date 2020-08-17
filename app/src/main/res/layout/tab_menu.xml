@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,26 +12,27 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
         android:clickable="true"
         android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:orientation="vertical">
+        android:paddingBottom="5dp">
 
         <ImageView
             android:id="@+id/school"
             android:layout_width="match_parent"
-            android:src="@drawable/ic_about"
-            android:clickable="false"
             android:layout_height="25dp"
-            tools:ignore="ContentDescription" />
-        <TextView
             android:clickable="false"
+            android:src="@drawable/ic_about"
+            tools:ignore="ContentDescription" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="About Us"
-            />
+            android:clickable="false"
+            android:text="@string/about_us"
+            android:lines="1" />
     </LinearLayout>
 
     <LinearLayout
@@ -43,21 +43,22 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
+        android:orientation="vertical"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:orientation="vertical">
+        android:paddingBottom="5dp">
 
         <ImageView
-            android:clickable="false"
             android:layout_width="match_parent"
-            android:src="@drawable/ic_chat"
-            android:layout_height="25dp" />
-        <TextView
+            android:layout_height="25dp"
             android:clickable="false"
+            android:src="@drawable/ic_chat" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chat"
-            />
+            android:clickable="false"
+            android:text="@string/post"
+            android:lines="1" />
     </LinearLayout>
 
     <LinearLayout
@@ -65,24 +66,25 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
         android:clickable="true"
         android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:orientation="vertical">
+        android:paddingBottom="5dp">
 
         <ImageView
-            android:clickable="false"
             android:layout_width="match_parent"
-            android:src="@drawable/ic_gift"
-            android:layout_height="25dp" />
-        <TextView
+            android:layout_height="25dp"
             android:clickable="false"
+            android:src="@drawable/ic_gift" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Donate"
-            />
+            android:clickable="false"
+            android:text="@string/donate"
+            android:lines="1"/>
     </LinearLayout>
 
     <LinearLayout
@@ -90,24 +92,25 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
         android:clickable="true"
         android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:orientation="vertical">
+        android:paddingBottom="5dp">
 
         <ImageView
-            android:clickable="false"
             android:layout_width="match_parent"
-            android:src="@drawable/ic_server"
-            android:layout_height="25dp" />
-        <TextView
+            android:layout_height="25dp"
             android:clickable="false"
+            android:src="@drawable/ic_server" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Needy"
-            />
+            android:clickable="false"
+            android:text="@string/needy"
+            android:lines="1" />
     </LinearLayout>
 
     <LinearLayout
@@ -115,24 +118,26 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
         android:clickable="true"
         android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:orientation="vertical">
+        android:paddingBottom="5dp">
 
         <ImageView
-            android:clickable="false"
             android:layout_width="match_parent"
-            android:src="@drawable/ic_baseline_person_24"
-            android:layout_height="25dp" />
-        <TextView
+            android:layout_height="25dp"
             android:clickable="false"
+            android:src="@drawable/ic_baseline_person_24"
+            tools:ignore="ContentDescription" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="My Account"
-            />
+            android:clickable="false"
+            android:text="@string/profile"
+            android:lines="1"/>
     </LinearLayout>
 
 </LinearLayout>

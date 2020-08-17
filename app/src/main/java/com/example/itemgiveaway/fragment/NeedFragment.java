@@ -1,17 +1,14 @@
 package com.example.itemgiveaway.fragment;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +29,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.itemgiveaway.App;
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.adapter.NeedyPersonAdapter;
+import com.example.itemgiveaway.controllers.CategoryController;
 import com.example.itemgiveaway.controllers.NeedyController;
 import com.example.itemgiveaway.interfaces.OnFailedListener;
 import com.example.itemgiveaway.interfaces.OnSuccessListener;
@@ -50,6 +47,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import static com.example.itemgiveaway.App.locationService;
+
 public class NeedFragment extends Fragment implements NeedyController.OnNeedyPersonListPreparesListener {
 
     private NeedyController controller = NeedyController.getInstance();
@@ -59,7 +58,6 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
     private View progressBar;
     double latitude;
     double longitude;
-    LocationService locationService;
     Location location;
 
     public NeedFragment() {
@@ -72,17 +70,15 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        locationService=new LocationService(requireContext());
-        location=locationService.getLocation();
-        if(location!=null) {
+        location = locationService.getLocation();
+        if (location != null) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
-
         }
-            return inflater.inflate(R.layout.fragment_need, container, false);
+        return inflater.inflate(R.layout.fragment_need, container, false);
 
     }
 
@@ -114,6 +110,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
         builder.setView(view);
         final AlertDialog addDialog = builder.create();
         Objects.requireNonNull(addDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        addDialog.getWindow().setWindowAnimations(R.style.alert);
         addDialog.show();
 
         final NeedyItem item = new NeedyItem();
@@ -138,7 +135,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
         });
         final ArrayList<Category> categories = new ArrayList<>();
         final int[] ci = {0};
-        controller.getCategories(new NeedyController.OnCategoriesListListener() {
+        CategoryController.getInstance().getCategories(new CategoryController.OnCategoriesListListener() {
             @Override
             public void onCategoriesListFetched(ArrayList<Category> cat) {
                 categories.clear();
@@ -204,7 +201,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
                     Toast.makeText(requireContext(), "Please choose needy picture", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                item.setLatLng(new LatLng(latitude,longitude));
+                item.setLatLng(new LatLng(latitude, longitude));
                 item.setName(itemName);
                 item.setPhone(number);
                 item.setAddress(address);
@@ -224,7 +221,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
                     @Override
                     public void onFailed(String s) {
                         progressBar.setVisibility(View.GONE);
-                        Toast.makeText(requireContext(),"failed to submit request",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "failed to submit request", Toast.LENGTH_SHORT).show();
                     }
                 });
                 progressBar.setVisibility(View.VISIBLE);
@@ -253,19 +250,24 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
                     itemcityEdit.setText(addresses.get(0).getFeatureName());
 
                     System.out.println(addresses.get(0).getAddressLine(0) + "======" + addresses.get(0).getLocality() + "===" + addresses.get(0).getPostalCode() + "===" + addresses.get(0).getSubLocality());
+                    // System.out.println(addresses.get(0).getLocale() + "======" + addresses.get(0).getLocality() + "===" + addresses.get(0).getPostalCode() + "===" + addresses.get(0).getSubLocality());
                 } else {
-                  //  showSettingsAlert();
+                    //  showSettingsAlert();
                 }
             }
         });
     }
 
     @Override
-    public void onNeedyItemListPrepared(ArrayList<NeedyItem> items) {
-        adapter.setItems(items);
-        progressBar.setVisibility(View.GONE);
+    public void onNeedyItemListPrepared(final ArrayList<NeedyItem> items) {
+        requireActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.setItems(items);
+                progressBar.setVisibility(View.GONE);
+            }
+        });
     }
-
 
 
     @Override

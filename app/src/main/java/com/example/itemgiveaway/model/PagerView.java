@@ -12,13 +12,13 @@ import com.example.itemgiveaway.fragment.NeedFragment;
 
 public class PagerView extends FragmentPagerAdapter {
     public PagerView(FragmentManager fm) {
-        super(fm);
+        super(fm, PagerView.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
     }
 
     @Override
     public Fragment getItem(int i) {
         Fragment fragment = null;
-        switch (i){
+        switch (i) {
 
             case 0:
                 fragment = new AboutFragment();
@@ -32,7 +32,7 @@ public class PagerView extends FragmentPagerAdapter {
             case 3:
                 fragment = new NeedFragment();
                 break;
-            case 4:
+            default:
                 fragment = new AccountFragment();
         }
         return fragment;

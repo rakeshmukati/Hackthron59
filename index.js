@@ -149,6 +149,12 @@ router.get("/donatedItems", authenticate, (req, res) => {
     });
 })
 
+router.delete("/donatedItems", authenticate, (req, res) => {
+    db.collection("donatedItem").deleteOne({
+        _id: req.body.ID
+    })
+})
+
 router.post("/donorInfo", authenticate, (req, res) => {
     if (req.body.email) {
         db.collection("users")
@@ -174,7 +180,7 @@ router.put("/donatedItem", (req, res) => {
     })
 })
 
-router.put("/postUser", (req, res) => {
+router.put("/postUser", authenticate, (req, res) => {
     console.log("add Post " + req.body)
     db.collection("postUser").insertOne(
         req.body
@@ -183,6 +189,14 @@ router.put("/postUser", (req, res) => {
         status: 200,
         message: "Post Success"
     })
+})
+
+router.get("/postUser", authenticate, (req, res) => {
+    db.collection("postUser").find().toArray(function(err, docs) {
+        if (docs.length != 0) {
+            res.send(JSON.stringify(docs))
+        }
+    });
 })
 
 router.get("/needyPersons", (req, res) => {

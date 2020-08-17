@@ -41,6 +41,13 @@ public class DonateItemAdapter extends RecyclerView.Adapter<DonateItemAdapter.My
                 onDonatedItemSelectListener.onItemSelected(item);
             }
         });
+        holder.donateListItem.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                onDonatedItemSelectListener.onItemLongSelected(item);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -70,5 +77,6 @@ public class DonateItemAdapter extends RecyclerView.Adapter<DonateItemAdapter.My
 
     public interface onDonatedItemSelectListener{
         void onItemSelected(Item item);
+        void onItemLongSelected(Item item);
     }
 }

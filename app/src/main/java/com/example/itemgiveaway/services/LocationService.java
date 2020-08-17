@@ -22,7 +22,6 @@ import androidx.core.app.ActivityCompat;
 public class LocationService extends Service implements LocationListener {
     private Context mContext;
 
-
     boolean isGPSEnabled = false;
 
     boolean isNetworkEnabled = false;
@@ -31,10 +30,10 @@ public class LocationService extends Service implements LocationListener {
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 5;
 
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 2 * 1;
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 2;
 
     protected LocationManager locationManager;
-    private  Location location;
+    private Location location;
 
     public LocationService(Context context) {
         this.mContext = context;

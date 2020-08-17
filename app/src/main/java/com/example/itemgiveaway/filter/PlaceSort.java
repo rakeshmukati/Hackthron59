@@ -3,15 +3,15 @@ package com.example.itemgiveaway.filter;
 import com.example.itemgiveaway.model.NeedyItem;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 
-public class PlaceSort implements Comparator< NeedyItem> {
+public class PlaceSort implements Comparator<NeedyItem> {
     LatLng currentLoc;
 
     public PlaceSort(LatLng latLng) {
-        currentLoc=latLng;
+        currentLoc = latLng;
     }
+
     @Override
     public int compare(final NeedyItem place1, final NeedyItem place2) {
         double lat1 = place1.getLatLng().latitude;
@@ -28,10 +28,10 @@ public class PlaceSort implements Comparator< NeedyItem> {
         double radius = 6378137;   // approximate Earth radius, in meters
         double deltaLat = toLat - fromLat;
         double deltaLon = toLon - fromLon;
-        double angle = 2 * Math.asin( Math.sqrt(
-                Math.pow(Math.sin(deltaLat/2), 2) +
+        double angle = 2 * Math.asin(Math.sqrt(
+                Math.pow(Math.sin(deltaLat / 2), 2) +
                         Math.cos(fromLat) * Math.cos(toLat) *
-                                Math.pow(Math.sin(deltaLon/2), 2) ) );
+                                Math.pow(Math.sin(deltaLon / 2), 2)));
         return radius * angle;
     }
 }

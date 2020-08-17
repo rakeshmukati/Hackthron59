@@ -6,10 +6,11 @@ public class Item {
 
     @SerializedName("_id")
     private String id;
+
     private String email, streetAddress, date, itemName;
+
     private long pinCode;
     private int categoryId;
-
     public String getPicture() {
         return picture;
     }
@@ -50,6 +51,14 @@ public class Item {
 
     public String getDate() {
         return date;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setDate(String date) {

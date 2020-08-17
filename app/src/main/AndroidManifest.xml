@@ -18,7 +18,8 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="q">
         <activity android:name=".activity.HomeActivity"
-                  android:label="GiveAway"/>
+                  android:label="GiveAway"
+            android:configChanges="keyboard|orientation"/>
         <activity
             android:name=".activity.LoginActivity"
             android:label="Login" />

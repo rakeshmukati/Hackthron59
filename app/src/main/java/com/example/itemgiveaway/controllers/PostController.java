@@ -1,5 +1,7 @@
 package com.example.itemgiveaway.controllers;
 
+import android.util.Log;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -7,11 +9,11 @@ import com.example.itemgiveaway.MyRequestQueue;
 import com.example.itemgiveaway.interfaces.OnFailedListener;
 import com.example.itemgiveaway.interfaces.OnSuccessListener;
 import com.example.itemgiveaway.model.Category;
-import com.example.itemgiveaway.model.Item;
 import com.example.itemgiveaway.model.Post;
 import com.example.itemgiveaway.utils.AuthenticationManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,5 +76,43 @@ public class PostController {
         };
 
         MyRequestQueue.getInstance().addRequest(stringRequest);
+    }
+
+    public void getPost(final OnSuccessListener<ArrayList<Post>> onSuccessListener) {
+        if (items == null) {
+            StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
+                    BASE_URL + "donatedItems",
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Log.d(TAG, response);
+                            try {
+                                items = new ArrayList<>();
+                                JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
+                                for (int i = 0; i < jsonElements.size(); i++) {
+                                    items.add(gson.fromJson(jsonElements.get(i), Post.class));
+                                }
+                                onSuccessListener.onSuccess(items);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
+                    return params;
+                }
+            };
+            MyRequestQueue.getInstance().addRequest(stringRequest);
+        } else {
+            onSuccessListener.onSuccess(items);
+        }
     }
 }

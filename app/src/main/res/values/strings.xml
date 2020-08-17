@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Item Giveaway</string>
-    <string name="enter_email">Enter Email</string>
-    <string name="hint_enter_password">Enter Password</string>
+    <string name="enter_email">enter email</string>
+    <string name="hint_enter_password">enter password</string>
     <string name="login">LOGIN</string>
     <string name="button_create_account">Not register yet? SignUp now</string>
-    <string name="hint_enter_name">Enter Name</string>
+    <string name="hint_enter_name">enter name</string>
     <string name="sign_up">SIGN UP</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="mobile_number">Mobile Number</string>
@@ -22,6 +22,11 @@
     <string name="giveaway">GIVEAWAY</string>
     <string name="search">Search</string>
     <string name="donate_item">DONATE ITEM</string>
+    <string name="profile">Profile</string>
+    <string name="needy">Needy</string>
+    <string name="donate">Donate</string>
+    <string name="post">Post</string>
+    <string name="about_us">About Us</string>
     <string name="enter_description">Enter Description</string>
     <string name="enter_title">Enter Title</string>
     <string name="enter_description_optional">Enter Description(Optional)</string>

@@ -3,6 +3,7 @@ package com.example.itemgiveaway.fragment;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -13,6 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -33,6 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.adapter.DonateItemAdapter;
+import com.example.itemgiveaway.controllers.CategoryController;
 import com.example.itemgiveaway.controllers.DonationItemController;
 import com.example.itemgiveaway.interfaces.OnFailedListener;
 import com.example.itemgiveaway.interfaces.OnSuccessListener;
@@ -70,7 +75,7 @@ public class DonateFragment extends Fragment implements DonationItemController.O
         super.onViewCreated(view, savedInstanceState);
         progressBar = view.findViewById(R.id.progressBar);
         adapter = new DonateItemAdapter(this);
-        RecyclerView donateList = view.findViewById(R.id.donateList);
+        final RecyclerView donateList = view.findViewById(R.id.donateList);
         donateList.setLayoutManager(new LinearLayoutManager(requireContext()));
         donateList.setItemAnimator(new DefaultItemAnimator());
         donateList.setAdapter(adapter);
@@ -92,8 +97,8 @@ public class DonateFragment extends Fragment implements DonationItemController.O
         builder.setView(view);
         final AlertDialog addDialog = builder.create();
         Objects.requireNonNull(addDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        addDialog.getWindow().setWindowAnimations(R.style.alert);
         addDialog.show();
-
         final Item item = new Item();
         final AppCompatSpinner categoriesSpinner = view.findViewById(R.id.categoriesSpinner);
         final AppCompatEditText itemNameEdit = view.findViewById(R.id.name);
@@ -111,7 +116,7 @@ public class DonateFragment extends Fragment implements DonationItemController.O
         });
         final ArrayList<Category> categories = new ArrayList<>();
         final int[] ci = {0};
-        controller.getCategories(new DonationItemController.OnCategoriesListListener() {
+        CategoryController.getInstance().getCategories(new CategoryController.OnCategoriesListListener() {
             @Override
             public void onCategoriesListFetched(ArrayList<Category> cat) {
                 categories.clear();
@@ -221,6 +226,41 @@ public class DonateFragment extends Fragment implements DonationItemController.O
         showDetail(item);
     }
 
+    @Override
+    public void onItemLongSelected(final Item item) {
+        AuthenticationManager.getInstance().getCurrentUser(new AuthenticationManager.OnUserCallbackListener() {
+            @Override
+            public void onUserDetailReceived(User currentUser) {
+                if (currentUser.getEmail().equals(item.getEmail())) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                    builder.setMessage("Delete item");
+                    builder.setMessage("Are you sure to remove this item from donation.");
+                    builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            controller.deleteItem(item, new OnSuccessListener<Item>() {
+                                @Override
+                                public void onSuccess(Item item) {
+                                    adapter.notifyDataSetChanged();
+                                    Toast.makeText(requireContext(), "Item removed successfully", Toast.LENGTH_SHORT).show();
+                                }
+                            }, new OnFailedListener<String>() {
+                                @Override
+                                public void onFailed(String s) {
+                                    Toast.makeText(requireContext(), "Failed to delete item.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", null);
+                    builder.create().show();
+                } else {
+                    Toast.makeText(requireContext(), "you can not delete this item.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
     private void showDetail(final Item item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_donate_item_detail, null, false);
@@ -245,7 +285,7 @@ public class DonateFragment extends Fragment implements DonationItemController.O
 
         final AppCompatTextView itemCategory = view.findViewById(R.id.itemCategory);
 
-        controller.getCategories(new DonationItemController.OnCategoriesListListener() {
+        CategoryController.getInstance().getCategories(new CategoryController.OnCategoriesListListener() {
             @Override
             public void onCategoriesListFetched(ArrayList<Category> categories) {
                 for (Category category : categories) {

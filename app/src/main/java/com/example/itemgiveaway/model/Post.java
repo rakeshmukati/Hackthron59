@@ -6,6 +6,8 @@ public class Post {
     @SerializedName("_id")
     private String id;
     private String email,title,description,text;
+    private String picture;
+
 
     public String getText() {
         return text;
@@ -14,8 +16,6 @@ public class Post {
     public void setText(String text) {
         this.text = text;
     }
-
-    private String picture;
 
     public String getId() {
         return id;
