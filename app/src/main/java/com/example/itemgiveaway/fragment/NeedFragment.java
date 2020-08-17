@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.itemgiveaway.App;
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.adapter.NeedyPersonAdapter;
 import com.example.itemgiveaway.controllers.NeedyController;
@@ -41,6 +42,7 @@ import com.example.itemgiveaway.model.Category;
 import com.example.itemgiveaway.model.NeedyItem;
 import com.example.itemgiveaway.services.LocationService;
 import com.example.itemgiveaway.utils.ImageUtils;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,6 +57,10 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
     private AppCompatImageView itemImage = null;
     private boolean itemPicAdded = false;
     private View progressBar;
+    double latitude;
+    double longitude;
+    LocationService locationService;
+    Location location;
 
     public NeedFragment() {
         // Required empty public constructor
@@ -69,7 +75,15 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_need, container, false);
+        locationService=new LocationService(requireContext());
+        location=locationService.getLocation();
+        if(location!=null) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+
+        }
+            return inflater.inflate(R.layout.fragment_need, container, false);
+
     }
 
     @Override
@@ -190,6 +204,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
                     Toast.makeText(requireContext(), "Please choose needy picture", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                item.setLatLng(new LatLng(latitude,longitude));
                 item.setName(itemName);
                 item.setPhone(number);
                 item.setAddress(address);
@@ -218,13 +233,9 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
 
         view.findViewById(R.id.location).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                LocationService locationService = new LocationService(requireContext());
-                Location location = locationService
-                        .getLocation();
+
                 System.out.println(location);
                 if (location != null) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
                     Geocoder geocoder;
                     List<Address> addresses = null;
                     geocoder = new Geocoder(requireContext(), Locale.getDefault());

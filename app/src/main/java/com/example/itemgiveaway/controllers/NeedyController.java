@@ -1,14 +1,19 @@
 package com.example.itemgiveaway.controllers;
 
+import android.location.Location;
 import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.itemgiveaway.App;
 import com.example.itemgiveaway.MyRequestQueue;
+import com.example.itemgiveaway.filter.FilterListByLocation;
 import com.example.itemgiveaway.interfaces.OnFailedListener;
 import com.example.itemgiveaway.interfaces.OnSuccessListener;
 import com.example.itemgiveaway.model.Category;
 import com.example.itemgiveaway.model.NeedyItem;
+import com.example.itemgiveaway.services.LocationService;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -65,7 +70,7 @@ public class NeedyController {
     public void getNeedyPersonList(final OnNeedyPersonListPreparesListener onNeedyPersonListPreparesListener) {
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
                 BASE_URL + "needyPersons",
-                new Response.Listener<String>() {
+                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.d(TAG, response);
@@ -76,7 +81,11 @@ public class NeedyController {
                             for (int i = 0; i < jsonElements.size(); i++) {
                                 items.add(gson.fromJson(jsonElements.get(i), NeedyItem.class));
                             }
-                            onNeedyPersonListPreparesListener.onNeedyItemListPrepared(items);
+                            LocationService locationService = new LocationService(App.context);
+                            Location location = locationService
+                                    .getLocation();
+                            FilterListByLocation filterListByLocation=new FilterListByLocation(new LatLng(location.getLatitude(),location.getLongitude()),items);
+                            onNeedyPersonListPreparesListener.onNeedyItemListPrepared(filterListByLocation.getList());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
