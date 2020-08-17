@@ -174,7 +174,16 @@ router.put("/donatedItem", (req, res) => {
     })
 })
 
-
+router.put("/postUser", (req, res) => {
+    console.log("add Post " + req.body)
+    db.collection("postUser").insertOne(
+        req.body
+    );
+    res.send({
+        status: 200,
+        message: "Post Success"
+    })
+})
 
 router.get("/needyPersons", (req, res) => {
     db.collection("needyPersons").find().toArray(function(err, docs) {
