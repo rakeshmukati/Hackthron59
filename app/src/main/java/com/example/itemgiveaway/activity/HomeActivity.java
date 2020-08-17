@@ -10,6 +10,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.model.PagerView;
+import com.example.itemgiveaway.services.LocationService;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
     LinearLayout about, donate, needy, chat, account;
@@ -33,7 +34,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         donate.setOnClickListener(this);
         needy.setOnClickListener(this);
         account.setOnClickListener(this);
-
+        LocationService locationService=new LocationService(this);
+        locationService.getLocation();
         pagerView = new PagerView(getSupportFragmentManager());
         viewPager.setAdapter(pagerView);
         viewPager.setCurrentItem(2);

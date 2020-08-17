@@ -206,7 +206,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
             public void onClick(View view) {
                 LocationService locationService = new LocationService(requireContext());
                 Location location = locationService
-                        .getLocation(LocationManager.GPS_PROVIDER);
+                        .getLocation();
                 System.out.println(location);
                 if (location != null) {
                     double latitude = location.getLatitude();
@@ -223,11 +223,12 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
                     //System.out.println("Data==========================="+city+"\n"+state+"\n"+country+"\n"+postalCode);
                     itemAddressEdit.setText(addresses.get(0).getLocality());
                     itemstateEdit.setText(addresses.get(0).getAdminArea());
+                    itemdistrictEdit.setText(addresses.get(0).getSubAdminArea());
                     itempincodeEdit.setText(addresses.get(0).getPostalCode());
-                    itemcityEdit.setText(addresses.get(0).getSubLocality());
-                    System.out.println(addresses.get(0).getLocale() + "======" + addresses.get(0).getLocality() + "===" + addresses.get(0).getPostalCode() + "===" + addresses.get(0).getSubLocality());
+                    itemcityEdit.setText(addresses.get(0).getFeatureName());
+                   // System.out.println(addresses.get(0).getLocale() + "======" + addresses.get(0).getLocality() + "===" + addresses.get(0).getPostalCode() + "===" + addresses.get(0).getSubLocality());
                 } else {
-                    showSettingsAlert();
+                  //  showSettingsAlert();
                 }
             }
         });
@@ -239,27 +240,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
         progressBar.setVisibility(View.GONE);
     }
 
-    public void showSettingsAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                requireContext());
-        alertDialog.setTitle("SETTINGS");
-        alertDialog.setMessage("Enable Location Provider! Go to settings menu?");
-        alertDialog.setPositiveButton("Settings",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(
-                                Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        NeedFragment.this.startActivity(intent);
-                    }
-                });
-        alertDialog.setNegativeButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        alertDialog.show();
-    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

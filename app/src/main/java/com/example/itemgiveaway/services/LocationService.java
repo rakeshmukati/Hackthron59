@@ -1,38 +1,131 @@
 package com.example.itemgiveaway.services;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
+import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
+import android.util.Log;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+
 
 public class LocationService extends Service implements LocationListener {
-    protected LocationManager locationManager;
-    Location location;
+    private Context mContext;
 
-    private static final long MIN_DISTANCE_FOR_UPDATE = 10;
-    private static final long MIN_TIME_FOR_UPDATE = 1000 * 60 * 2;
+
+    boolean isGPSEnabled = false;
+
+    boolean isNetworkEnabled = false;
+
+    boolean canGetLocation = false;
+
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 5;
+
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 2 * 1;
+
+    protected LocationManager locationManager;
+    private  Location location;
 
     public LocationService(Context context) {
-        locationManager = (LocationManager) context
-                .getSystemService(LOCATION_SERVICE);
+        this.mContext = context;
+        getLocation();
     }
 
-    @SuppressLint("MissingPermission")
-    public Location getLocation(String provider) {
-        if (locationManager.isProviderEnabled(provider)) {
-            locationManager.requestLocationUpdates(provider,
-                    MIN_TIME_FOR_UPDATE, MIN_DISTANCE_FOR_UPDATE, LocationService.this);
-            if (locationManager != null) {
-                location = locationManager.getLastKnownLocation(provider);
-                return location;
+    public LocationService() {
+    }
+
+    public Location getLocation() {
+        try {
+            locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+            isNetworkEnabled = locationManager
+                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+            if (!isGPSEnabled && !isNetworkEnabled) {
+                showSettingsAlert();
+            } else {
+                this.canGetLocation = true;
+                if (isNetworkEnabled) {
+                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions((Activity) mContext, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+                    }
+                    locationManager.requestLocationUpdates(
+                            LocationManager.NETWORK_PROVIDER,
+                            MIN_TIME_BW_UPDATES,
+                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+
+                    Log.d("Network", "Network");
+                    if (locationManager != null) {
+                        //
+
+                        location = locationManager
+                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+                        // }
+
+                    }
+                }
+
+                // if GPS Enabled get lat/long using GPS Services
+                if (isGPSEnabled) {
+                    if (location == null) {
+                        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions((Activity) mContext, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+                        }
+                        locationManager.requestLocationUpdates(
+                                LocationManager.GPS_PROVIDER,
+                                MIN_TIME_BW_UPDATES,
+                                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+
+                        Log.d("GPS Enabled", "GPS Enabled");
+                        if (locationManager != null) {
+                            //  while(!(location!=null)) {
+                            Thread.sleep(2000);
+                            location = locationManager
+                                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            // }
+                        }
+                    }
+                }
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return null;
+
+        return location;
+    }
+
+    public void showSettingsAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        alertDialog.setTitle("GPS settings");
+        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+
+
+        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                mContext.startActivity(intent);
+            }
+        });
+
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        alertDialog.show();
     }
 
     @Override
@@ -55,5 +148,4 @@ public class LocationService extends Service implements LocationListener {
     public IBinder onBind(Intent arg0) {
         return null;
     }
-
 }
