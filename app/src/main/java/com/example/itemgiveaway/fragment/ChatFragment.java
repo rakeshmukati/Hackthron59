@@ -120,11 +120,12 @@ public class ChatFragment extends Fragment {
                    dialogTitle.setError("name require!");
                    return;
                }
+               if(value=="IMAGE"){
+                   post.setPicture(new ImageUtils().viewToString(dialogImage));
+               }else{ post.setText(text);}
 
                post.setTitle(title);
                post.setDescription(description);
-               post.setText(text);
-               post.setPicture(new ImageUtils().viewToString(dialogImage));
                progressBar.setVisibility(View.VISIBLE);
                controller.addItemPost(post, new OnSuccessListener<Post>() {
                    @Override

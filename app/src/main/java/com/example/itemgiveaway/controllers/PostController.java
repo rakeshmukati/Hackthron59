@@ -39,6 +39,7 @@ public class PostController {
 
     public void addItemPost(final Post item, final OnSuccessListener<Post> onSuccessListener, final OnFailedListener<String> onFailedListener) {
         final byte[] bytes = new GsonBuilder().create().toJson(item).getBytes();
+        items = new ArrayList<>();
         StringRequest stringRequest = new StringRequest(StringRequest.Method.PUT,
                 BASE_URL + "postUser",
                 new Response.Listener<String>() {
