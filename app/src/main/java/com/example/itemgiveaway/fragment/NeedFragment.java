@@ -35,6 +35,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.adapter.NeedyPersonAdapter;
 import com.example.itemgiveaway.controllers.NeedyController;
+import com.example.itemgiveaway.interfaces.OnFailedListener;
+import com.example.itemgiveaway.interfaces.OnSuccessListener;
 import com.example.itemgiveaway.model.Category;
 import com.example.itemgiveaway.model.NeedyItem;
 import com.example.itemgiveaway.services.LocationService;
@@ -111,6 +113,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
         final EditText itemblockEdit = view.findViewById(R.id.block);
         final EditText itemstateEdit = view.findViewById(R.id.state);
         final EditText itempincodeEdit = view.findViewById(R.id.pinCode);
+        final View progressBar = view.findViewById(R.id.progressBar);
         itemImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,7 +148,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
         });
         view.findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 Log.d("", "==============================>" + ci[0]);
                 String number = "null";
                 String itemName = itemNameEdit.getText().toString();
@@ -184,7 +187,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
                     return;
                 }
                 if (!itemPicAdded) {
-                    Toast.makeText(requireContext(), "Please choose item pic", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Please choose needy picture", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 item.setName(itemName);
@@ -196,9 +199,20 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
                 item.setPostcode(pincode);
                 item.setState(state);
                 item.setPicture(new ImageUtils().viewToString(itemImage));
-                controller.addNeedyPerson(item);
-                Log.d("", "=================pic " + item.getPicture());
-                addDialog.cancel();
+                controller.addNeedyPerson(item, new OnSuccessListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        addDialog.cancel();
+                        adapter.notifyDataSetChanged();
+                    }
+                }, new OnFailedListener<String>() {
+                    @Override
+                    public void onFailed(String s) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(requireContext(),"failed to submit request",Toast.LENGTH_SHORT).show();
+                    }
+                });
+                progressBar.setVisibility(View.VISIBLE);
             }
         });
 

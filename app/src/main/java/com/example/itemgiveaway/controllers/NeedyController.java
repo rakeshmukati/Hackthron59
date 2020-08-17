@@ -5,6 +5,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.itemgiveaway.MyRequestQueue;
+import com.example.itemgiveaway.interfaces.OnFailedListener;
+import com.example.itemgiveaway.interfaces.OnSuccessListener;
 import com.example.itemgiveaway.model.Category;
 import com.example.itemgiveaway.model.NeedyItem;
 import com.google.gson.Gson;
@@ -88,19 +90,20 @@ public class NeedyController {
         };
         MyRequestQueue.getInstance().addRequest(stringRequest);
     }
-    public void addNeedyPerson(final NeedyItem item) {
+    public void addNeedyPerson(final NeedyItem item, final OnSuccessListener<String> onSuccessListener, final OnFailedListener<String> onFailedListener) {
         StringRequest stringRequest = new StringRequest(StringRequest.Method.PUT,
                 BASE_URL + "needyPersons",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d(TAG, "================================>" + response);
+                        onSuccessListener.onSuccess(response);
                         items.add(item);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        onFailedListener.onFailed(error.getMessage());
                         Log.d(TAG, "================================>" + error);
                     }
                 }) {
