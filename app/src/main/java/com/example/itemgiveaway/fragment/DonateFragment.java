@@ -14,9 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -77,6 +74,7 @@ public class DonateFragment extends Fragment implements DonationItemController.O
         super.onViewCreated(view, savedInstanceState);
         progressBar = view.findViewById(R.id.progressBar);
         adapter = new DonateItemAdapter(this);
+        swipeRefreshLayout=view.findViewById(R.id.refresh);
         final RecyclerView donateList = view.findViewById(R.id.donateList);
         donateList.setLayoutManager(new LinearLayoutManager(requireContext()));
         donateList.setItemAnimator(new DefaultItemAnimator());
@@ -84,7 +82,6 @@ public class DonateFragment extends Fragment implements DonationItemController.O
         controller.getDonatedItemList(this);
 
         //set add button
-        swipeRefreshLayout=view.findViewById(R.id.refresh);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

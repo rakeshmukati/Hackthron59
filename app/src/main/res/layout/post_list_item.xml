@@ -20,14 +20,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:paddingVertical="5dp"
-                android:textSize="16sp" />
+                android:textColor="@color/black"
+                android:textSize="18sp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/postText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
+                android:gravity="center"
+                android:minHeight="200dp"
+                android:paddingHorizontal="10dp"
                 android:paddingVertical="5dp"
+                android:textAlignment="gravity"
+                android:textColor="@color/black"
                 android:textSize="14sp" />
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -41,7 +51,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <View
                     android:id="@+id/divider"
@@ -52,7 +63,8 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/postDescription"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"/>
             </LinearLayout>
 
         </LinearLayout>

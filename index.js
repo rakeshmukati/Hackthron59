@@ -153,11 +153,13 @@ router.delete("/donatedItem", authenticate, (req, res) => {
     console.log("delete donate item id = ", req.body.ID)
     db.collection("donatedItem").deleteOne({
         _id: req.body.ID
+    }, function(err, result) {
+        console.log(err, result)
+        res.send(JSON.stringify({
+            status: 200,
+            message: "item removed."
+        }))
     })
-    res.send(JSON.stringify({
-        status: 200,
-        message: "item removed."
-    }))
 })
 
 router.post("/donorInfo", authenticate, (req, res) => {
@@ -174,7 +176,7 @@ router.post("/donorInfo", authenticate, (req, res) => {
 })
 
 
-router.put("/donatedItem", (req, res) => {
+router.put("/donatedItem", authenticate, (req, res) => {
     console.log("add donatedItem " + req.body)
     db.collection("donatedItem").insertOne(
         req.body
@@ -187,28 +189,38 @@ router.put("/donatedItem", (req, res) => {
 
 router.put("/postUser", authenticate, (req, res) => {
     console.log("add Post " + req.body)
-    db.collection("postUser").insertOne(
-        req.body
-    );
-    res.send({
-        status: 200,
-        message: "Post Success"
-    })
+
+    db.collection("postUser").insertOne({
+            id: req.body.id,
+            email: req.body.email,
+            title: req.body.title,
+            description: req.body.description,
+            text: req.body.text,
+            picture: req.body.picture
+        },
+        function(err, result) {
+            res.send({
+                status: 200,
+                message: "Post Success"
+            })
+        });
+
 })
 
 router.get("/postUser", authenticate, (req, res) => {
+    console.log("get posts list")
     db.collection("postUser").find().toArray(function(err, docs) {
         res.send(JSON.stringify(docs))
     });
 })
 
-router.get("/needyPersons", (req, res) => {
+router.get("/needyPersons", authenticate, (req, res) => {
     db.collection("needyPersons").find().toArray(function(err, docs) {
         res.send(JSON.stringify(docs))
     });
 })
 
-router.put("/needyPersons", (req, res) => {
+router.put("/needyPersons", authenticate, (req, res) => {
     console.log("add Needy " + req.body)
     db.collection("needyPersons").insertOne(
         req.body

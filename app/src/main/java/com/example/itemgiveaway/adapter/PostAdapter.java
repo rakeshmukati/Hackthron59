@@ -29,6 +29,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         final Post post = posts.get(position);
 
+
         final String picture = post.getPicture();
         if (picture == null || picture.length() == 0) {
             holder.postPicture.setVisibility(View.GONE);
@@ -46,7 +47,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         }
 
         String description = post.getDescription();
-        if (picture == null || picture.length() == 0) {
+        if (description == null || description.length() == 0) {
             holder.layoutDescription.setVisibility(View.GONE);
         } else {
             holder.layoutDescription.setVisibility(View.VISIBLE);

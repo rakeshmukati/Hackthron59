@@ -72,10 +72,11 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
 
         swipeRefreshLayout=view.findViewById(R.id.refresh);
 
+        controller.getPost(this,true);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                controller.getPost(ChatFragment.this);
+                controller.getPost(ChatFragment.this,false);
                 // swipeRefreshLayout.setRefreshing(false);
             }
 
@@ -83,12 +84,12 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
         view.findViewById(R.id.btnPostDialog).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addPostDialod();
+                addPostDialog();
             }
         });
     }
 
-    public void addPostDialod() {
+    public void addPostDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_post, null, false);
         builder.setView(view);
@@ -99,7 +100,6 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
         final Post post = new Post();
         final RadioGroup radioGroup;
         final AppCompatEditText dialogText = view.findViewById(R.id.dialog_text);
-        ;
         final AppCompatEditText dialogTitle = view.findViewById(R.id.name);
         final AppCompatEditText dialogDescrip = view.findViewById(R.id.description);
         final View progressBar = view.findViewById(R.id.progressBar);
@@ -173,8 +173,6 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
                 post.setEmail(currentUser.getEmail());
             }
         });
-
-        controller.getPost(this);
     }
 
     @Override

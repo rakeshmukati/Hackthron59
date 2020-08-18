@@ -8,7 +8,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.itemgiveaway.MyRequestQueue;
 import com.example.itemgiveaway.interfaces.OnFailedListener;
 import com.example.itemgiveaway.interfaces.OnSuccessListener;
-import com.example.itemgiveaway.model.Category;
 import com.example.itemgiveaway.model.Post;
 import com.example.itemgiveaway.utils.AuthenticationManager;
 import com.google.gson.Gson;
@@ -77,8 +76,8 @@ public class PostController {
         MyRequestQueue.getInstance().addRequest(stringRequest);
     }
 
-    public void getPost(final OnSuccessListener<ArrayList<Post>> onSuccessListener) {
-        if (items == null) {
+    public void getPost(final OnSuccessListener<ArrayList<Post>> onSuccessListener,boolean useCache) {
+        if (items == null||!useCache) {
             StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
                     BASE_URL + "postUser",
                     new Response.Listener<String>() {
@@ -100,7 +99,7 @@ public class PostController {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.d("TEST","error.getMessage()"+error.getMessage());
+                            Log.d("TEST","==============================error.getMessage()"+error.getMessage());
                         }
                     }) {
                 @Override

@@ -89,13 +89,13 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
 
         progressBar = view.findViewById(R.id.progressBar);
         adapter = new NeedyPersonAdapter();
+        swipeRefreshLayout=view.findViewById(R.id.refresh);
 
         RecyclerView needyList = view.findViewById(R.id.needyList);
         needyList.setLayoutManager(new LinearLayoutManager(requireContext()));
         needyList.setItemAnimator(new DefaultItemAnimator());
         needyList.setAdapter(adapter);
         controller.getNeedyPersonList(this);
-        swipeRefreshLayout=view.findViewById(R.id.refresh);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
