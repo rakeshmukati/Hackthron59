@@ -53,6 +53,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
             holder.postDescription.setText(description);
         }
 
+        holder.postTitle.setText(post.getTitle());
     }
 
     @Override

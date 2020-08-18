@@ -1,15 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     tools:context=".fragment.AboutFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="About Fragment" />
+        android:text="About Us"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textColor="@color/colorAccent"
+        android:text="Item Giveaway app aims to bring donor and needy at one platform. It provides option to the user that He can search for items based on type or location and It will enable donor to donate items directly to needy.Item Giveaway app can be used by Government, NGO\'s, Trust to manage their donation related activities."
+       />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textColor="@color/new_color"
+        android:text="We promise:\n\n• An easy and best user experience.\n• A safe and secure process.\n• A hassle-free online experience.\n• And a totally satisfied you, who'll want to come back to us\tagain and again."
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textColor="#5BF608"
+        android:text="After all, you know it\'s an application which will provide self reliance to India and do not have to depend on others."
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="4"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
 
-</FrameLayout>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_gmail"
+            android:layout_weight="1"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_baseline_phone_24"
+            android:layout_weight="1"
+            app:tint="#5BF608" />
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_instagram"
+            android:layout_weight="1"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_twitter"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+</LinearLayout>
