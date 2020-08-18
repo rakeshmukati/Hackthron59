@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const MongoClient = require('mongodb').MongoClient;
 const md5 = require('md5');
 const jwt = require('jsonwebtoken');
+var ObjectId = require('mongodb').ObjectID
 
 var db;
 const router = express.Router();
@@ -149,16 +150,22 @@ router.get("/donatedItems", authenticate, (req, res) => {
     });
 })
 
+//  authenticate user and remove item 
 router.delete("/donatedItem", authenticate, (req, res) => {
-    console.log("delete donate item id = ", req.body.ID)
     db.collection("donatedItem").deleteOne({
-        _id: req.body.ID
+        _id: ObjectId(req.body.ID)
     }, function(err, result) {
-        console.log(err, result)
-        res.send(JSON.stringify({
-            status: 200,
-            message: "item removed."
-        }))
+        if (err) {
+            res.send(JSON.stringify({
+                status: 403,
+                message: "failed to delete item."
+            }))
+        } else {
+            res.send(JSON.stringify({
+                status: 200,
+                message: "item removed."
+            }))
+        }
     })
 })
 

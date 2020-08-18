@@ -2,6 +2,7 @@ package com.example.itemgiveaway.controllers;
 
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -13,6 +14,7 @@ import com.example.itemgiveaway.utils.AuthenticationManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +25,7 @@ import static com.example.itemgiveaway.MyRequestQueue.BASE_URL;
 public class PostController {
     private static final String TAG = DonationItemController.class.getSimpleName();
     private static PostController controller = null;
-    private ArrayList<Post> items = null;
+    private ArrayList<Post> posts = null;
     private Gson gson = new GsonBuilder().create();
 
     private PostController() {
@@ -39,13 +41,13 @@ public class PostController {
 
     public void addItemPost(final Post item, final OnSuccessListener<Post> onSuccessListener, final OnFailedListener<String> onFailedListener) {
         final byte[] bytes = new GsonBuilder().create().toJson(item).getBytes();
-        items = new ArrayList<>();
+        posts = new ArrayList<>();
         StringRequest stringRequest = new StringRequest(StringRequest.Method.PUT,
                 BASE_URL + "postUser",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        items.add(item);
+                        posts.add(item);
                         onSuccessListener.onSuccess(item);
                     }
                 },
@@ -77,7 +79,7 @@ public class PostController {
     }
 
     public void getPost(final OnSuccessListener<ArrayList<Post>> onSuccessListener,boolean useCache) {
-        if (items == null||!useCache) {
+        if (posts == null||!useCache) {
             StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
                     BASE_URL + "postUser",
                     new Response.Listener<String>() {
@@ -85,12 +87,12 @@ public class PostController {
                         public void onResponse(String response) {
                             Log.d(TAG,"==================================="+ response);
                             try {
-                                items = new ArrayList<>();
+                                posts = new ArrayList<>();
                                 JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
                                 for (int i = 0; i < jsonElements.size(); i++) {
-                                    items.add(gson.fromJson(jsonElements.get(i), Post.class));
+                                    posts.add(gson.fromJson(jsonElements.get(i), Post.class));
                                 }
-                                onSuccessListener.onSuccess(items);
+                                onSuccessListener.onSuccess(posts);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -111,7 +113,46 @@ public class PostController {
             };
             MyRequestQueue.getInstance().addRequest(stringRequest);
         } else {
-            onSuccessListener.onSuccess(items);
+            onSuccessListener.onSuccess(posts);
         }
     }
+    public void deletePost(final Post post, final OnSuccessListener<Post> onSuccessListener, final OnFailedListener<String> onFailedListener) {
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.DELETE,
+                BASE_URL + "postUser",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JsonObject res = gson.fromJson(response,JsonObject.class);
+                        if (res.get("status").getAsInt()==200){
+                            PostController.this.posts.remove(post);
+                            onSuccessListener.onSuccess(post);
+                        }else {
+                            onFailedListener.onFailed(res.get("message").getAsString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        onFailedListener.onFailed(error.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<>();
+                map.put("ID", post.getId());
+                return map;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
+                return params;
+            }
+        };
+
+        MyRequestQueue.getInstance().addRequest(stringRequest);
+    }
+
 }

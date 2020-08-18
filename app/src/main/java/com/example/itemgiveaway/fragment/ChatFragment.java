@@ -2,6 +2,7 @@ package com.example.itemgiveaway.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -37,7 +38,7 @@ import com.example.itemgiveaway.utils.ImageUtils;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ChatFragment extends Fragment implements OnSuccessListener<ArrayList<Post>> {
+public class ChatFragment extends Fragment implements OnSuccessListener<ArrayList<Post>>, PostAdapter.OnPostAdapterListener {
     private AppCompatImageView dialogImage = null;
     private PostAdapter adapter;
     private PostController controller = PostController.getInstance();
@@ -65,18 +66,18 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
 
         progressBar = view.findViewById(R.id.progressBar);
         RecyclerView postRecyclerView = view.findViewById(R.id.postRecyclerView);
-        adapter = new PostAdapter();
+        adapter = new PostAdapter(this);
         postRecyclerView.setItemAnimator(new DefaultItemAnimator());
         postRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         postRecyclerView.setAdapter(adapter);
 
-        swipeRefreshLayout=view.findViewById(R.id.refresh);
+        swipeRefreshLayout = view.findViewById(R.id.refresh);
 
-        controller.getPost(this,true);
+        controller.getPost(this, true);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                controller.getPost(ChatFragment.this,false);
+                controller.getPost(ChatFragment.this, false);
                 // swipeRefreshLayout.setRefreshing(false);
             }
 
@@ -194,5 +195,41 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
         adapter.setItems(posts);
         progressBar.setVisibility(View.GONE);
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onLongPostSelect(final Post post) {
+        AuthenticationManager.getInstance().getCurrentUser(new AuthenticationManager.OnUserCallbackListener() {
+            @Override
+            public void onUserDetailReceived(User currentUser) {
+                if (currentUser.getEmail().equals(post.getEmail())) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                    builder.setMessage("Delete item");
+                    builder.setMessage("Are you sure to remove this item from donation.");
+                    builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            controller.deletePost(post, new OnSuccessListener<Post>() {
+                                @Override
+                                public void onSuccess(Post post) {
+                                    Toast.makeText(requireContext(), "Post deleted successfully", Toast.LENGTH_SHORT).show();
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }, new OnFailedListener<String>() {
+                                @Override
+                                public void onFailed(String s) {
+                                    Toast.makeText(requireContext(), "Failed to delete post.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", null);
+                    builder.create().show();
+                } else {
+                    Toast.makeText(requireContext(), "you can't delete this post", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

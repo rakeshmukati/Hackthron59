@@ -238,7 +238,6 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
 
         view.findViewById(R.id.location).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-
                 System.out.println(location);
                 if (location != null) {
                     Geocoder geocoder;
@@ -256,9 +255,6 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
                     itemdistrictEdit.setText(addresses.get(0).getSubAdminArea());
                     itempincodeEdit.setText(addresses.get(0).getPostalCode());
                     itemcityEdit.setText(addresses.get(0).getFeatureName());
-
-                    System.out.println(addresses.get(0).getAddressLine(0) + "======" + addresses.get(0).getLocality() + "===" + addresses.get(0).getPostalCode() + "===" + addresses.get(0).getSubLocality());
-                    // System.out.println(addresses.get(0).getLocale() + "======" + addresses.get(0).getLocality() + "===" + addresses.get(0).getPostalCode() + "===" + addresses.get(0).getSubLocality());
                 } else {
                     //  showSettingsAlert();
                 }

@@ -18,6 +18,11 @@ import java.util.ArrayList;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> {
     private final ArrayList<Post> posts = new ArrayList<>();
     private ImageUtils imageUtils = new ImageUtils();
+    private final OnPostAdapterListener onPostAdapterListener;
+
+    public PostAdapter(OnPostAdapterListener onPostAdapterListener) {
+        this.onPostAdapterListener = onPostAdapterListener;
+    }
 
     @NonNull
     @Override
@@ -28,7 +33,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         final Post post = posts.get(position);
-
 
         final String picture = post.getPicture();
         if (picture == null || picture.length() == 0) {
@@ -55,6 +59,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         }
 
         holder.postTitle.setText(post.getTitle());
+        holder.postListItem.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                onPostAdapterListener.onLongPostSelect(post);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -62,19 +73,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
         return posts.size();
     }
 
-    static class MyViewHolder extends RecyclerView.ViewHolder {
-        AppCompatImageView postPicture;
-        AppCompatTextView postTitle, postText, postDescription;
-        View layoutDescription;
-
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            postPicture = itemView.findViewById(R.id.postPicture);
-            postText = itemView.findViewById(R.id.postText);
-            postTitle = itemView.findViewById(R.id.postTitle);
-            postDescription = itemView.findViewById(R.id.postDescription);
-            layoutDescription = itemView.findViewById(R.id.layoutDescription);
-        }
+    public interface OnPostAdapterListener{
+        void onLongPostSelect(Post post);
     }
 
     public void setItems(ArrayList<Post> posts) {
@@ -82,6 +82,23 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
             this.posts.clear();
             this.posts.addAll(posts);
             notifyDataSetChanged();
+        }
+    }
+
+    static class MyViewHolder extends RecyclerView.ViewHolder {
+        AppCompatImageView postPicture;
+        AppCompatTextView postTitle, postText, postDescription;
+        View layoutDescription;
+        View postListItem;
+
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            postListItem = itemView.findViewById(R.id.postListItem);
+            postPicture = itemView.findViewById(R.id.postPicture);
+            postText = itemView.findViewById(R.id.postText);
+            postTitle = itemView.findViewById(R.id.postTitle);
+            postDescription = itemView.findViewById(R.id.postDescription);
+            layoutDescription = itemView.findViewById(R.id.layoutDescription);
         }
     }
 }

@@ -4,7 +4,6 @@ import android.location.Location;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -12,7 +11,6 @@ import com.example.itemgiveaway.MyRequestQueue;
 import com.example.itemgiveaway.filter.FilterListByLocation;
 import com.example.itemgiveaway.interfaces.OnFailedListener;
 import com.example.itemgiveaway.interfaces.OnSuccessListener;
-import com.example.itemgiveaway.model.Category;
 import com.example.itemgiveaway.model.Item;
 import com.example.itemgiveaway.model.User;
 import com.example.itemgiveaway.services.LocationService;
@@ -21,6 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -175,8 +174,13 @@ public class DonationItemController {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        items.remove(item);
-                        onSuccessListener.onSuccess(item);
+                        JsonObject res = gson.fromJson(response,JsonObject.class);
+                        if (res.get("status").getAsInt()==200){
+                            items.remove(item);
+                            onSuccessListener.onSuccess(item);
+                        }else {
+                            onFailedListener.onFailed(res.get("message").getAsString());
+                        }
                     }
                 },
                 new Response.ErrorListener() {
