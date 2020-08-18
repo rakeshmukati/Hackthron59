@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.adapter.PostAdapter;
@@ -42,6 +43,7 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
     private PostController controller = PostController.getInstance();
     String value = null;
     private View progressBar;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     public ChatFragment() {
     }
@@ -67,6 +69,17 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
         postRecyclerView.setItemAnimator(new DefaultItemAnimator());
         postRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         postRecyclerView.setAdapter(adapter);
+
+        swipeRefreshLayout=view.findViewById(R.id.refresh);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                controller.getPost(ChatFragment.this);
+                // swipeRefreshLayout.setRefreshing(false);
+            }
+
+        });
         view.findViewById(R.id.btnPostDialog).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,5 +194,6 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
     public void onSuccess(ArrayList<Post> posts) {
         adapter.setItems(posts);
         progressBar.setVisibility(View.GONE);
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

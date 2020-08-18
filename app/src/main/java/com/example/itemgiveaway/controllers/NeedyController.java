@@ -27,7 +27,6 @@ public class NeedyController {
     private static final String TAG = NeedyController.class.getSimpleName();
     private static NeedyController controller = null;
     private ArrayList<NeedyItem> items = null;
-
     public NeedyController() {
     }
 
@@ -39,6 +38,20 @@ public class NeedyController {
     }
 
     public void getNeedyPersonList(final OnNeedyPersonListPreparesListener onNeedyPersonListPreparesListener) {
+        if(items==null){
+            getListFromServer(onNeedyPersonListPreparesListener);
+        }
+        else {
+            onNeedyPersonListPreparesListener.onNeedyItemListPrepared(items);
+        }
+    }
+
+    public void getNewList(final OnNeedyPersonListPreparesListener onNeedyPersonListPreparesListener){
+        getListFromServer(onNeedyPersonListPreparesListener);
+    }
+
+    public void getListFromServer(final OnNeedyPersonListPreparesListener onNeedyPersonListPreparesListener){
+
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
                 BASE_URL + "needyPersons",
                 new Response.Listener<String>() {

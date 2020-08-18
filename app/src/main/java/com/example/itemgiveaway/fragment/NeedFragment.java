@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.adapter.NeedyPersonAdapter;
@@ -58,6 +59,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
     double latitude;
     double longitude;
     Location location;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     public NeedFragment() {
         // Required empty public constructor
@@ -87,12 +89,22 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
 
         progressBar = view.findViewById(R.id.progressBar);
         adapter = new NeedyPersonAdapter();
+
         RecyclerView needyList = view.findViewById(R.id.needyList);
         needyList.setLayoutManager(new LinearLayoutManager(requireContext()));
         needyList.setItemAnimator(new DefaultItemAnimator());
         needyList.setAdapter(adapter);
         controller.getNeedyPersonList(this);
+        swipeRefreshLayout=view.findViewById(R.id.refresh);
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                controller.getNewList(NeedFragment.this);
+               // swipeRefreshLayout.setRefreshing(false);
+            }
+
+        });
         //set add button
         view.findViewById(R.id.btnAddNeedy).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,6 +275,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
             @Override
             public void run() {
                 adapter.setItems(items);
+                swipeRefreshLayout.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
             }
         });

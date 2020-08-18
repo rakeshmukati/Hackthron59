@@ -44,40 +44,48 @@ public class DonationItemController {
 
     public void getDonatedItemList(final OnDonatedItemListPreparesListener onDonatedItemListPreparesListener) {
         if (items == null) {
-            StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
-                    BASE_URL + "donatedItems",
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            Log.d(TAG, response);
-                            try {
-                                items = new ArrayList<>();
-                                JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
-                                for (int i = 0; i < jsonElements.size(); i++) {
-                                    items.add(gson.fromJson(jsonElements.get(i), Item.class));
-                                }
-                                onDonatedItemListPreparesListener.onItemListPrepared(items);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                        }
-                    }) {
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
-                    return params;
-                }
-            };
-            MyRequestQueue.getInstance().addRequest(stringRequest);
+            getListFromServer(onDonatedItemListPreparesListener);
         } else {
             onDonatedItemListPreparesListener.onItemListPrepared(items);
         }
+    }
+
+    public void getNewList(final OnDonatedItemListPreparesListener onDonatedItemListPreparesListener){
+        getListFromServer(onDonatedItemListPreparesListener);
+    }
+    public void getListFromServer(final OnDonatedItemListPreparesListener onDonatedItemListPreparesListener) {
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
+                BASE_URL + "donatedItems",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, response);
+                        try {
+                            items = new ArrayList<>();
+                            JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
+                            for (int i = 0; i < jsonElements.size(); i++) {
+                                items.add(gson.fromJson(jsonElements.get(i), Item.class));
+                            }
+                            onDonatedItemListPreparesListener.onItemListPrepared(items);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
+                return params;
+            }
+        };
+        MyRequestQueue.getInstance().addRequest(stringRequest);
+
     }
 
     public void addItemForDonation(final Item item, final OnSuccessListener<Item> onSuccessListener, final OnFailedListener<String> onFailedListener) {
@@ -174,8 +182,8 @@ public class DonationItemController {
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> map = new HashMap<>();
-                map.put("ID",item.getId());
+                Map<String, String> map = new HashMap<>();
+                map.put("ID", item.getId());
                 return map;
             }
 

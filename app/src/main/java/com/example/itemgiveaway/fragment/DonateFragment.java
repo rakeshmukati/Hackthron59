@@ -34,6 +34,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.adapter.DonateItemAdapter;
@@ -57,6 +58,7 @@ public class DonateFragment extends Fragment implements DonationItemController.O
     private DonateItemAdapter adapter;
     private AppCompatImageView itemImage = null;
     private boolean itemPicAdded = false;
+    SwipeRefreshLayout swipeRefreshLayout;
     private View progressBar;
 
     public DonateFragment() {
@@ -82,6 +84,17 @@ public class DonateFragment extends Fragment implements DonationItemController.O
         controller.getDonatedItemList(this);
 
         //set add button
+        swipeRefreshLayout=view.findViewById(R.id.refresh);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                controller.getNewList(DonateFragment.this);
+
+                // swipeRefreshLayout.setRefreshing(false);
+            }
+
+        });
         view.findViewById(R.id.btnDonateItem).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -204,6 +217,7 @@ public class DonateFragment extends Fragment implements DonationItemController.O
     public void onItemListPrepared(ArrayList<Item> items) {
         adapter.setItems(items);
         progressBar.setVisibility(View.GONE);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
