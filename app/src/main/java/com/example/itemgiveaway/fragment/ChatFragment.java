@@ -152,7 +152,12 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
                 } else {
                     post.setText(text);
                 }
-
+                Location location = App.locationService.getLocation();
+                if (location!=null){
+                    post.setLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
+                }else{
+                    post.setLatLng(new LatLng(0,0));
+                }
                 post.setTitle(title);
                 post.setDescription(description);
                 controller.addItemPost(post, new OnSuccessListener<Post>() {
@@ -170,12 +175,6 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
                     }
                 });
 
-                Location location = App.locationService.getLocation();
-                if (location!=null){
-                    post.setLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
-                }else{
-                    post.setLatLng(new LatLng(0,0));
-                }
             }
         });
         AuthenticationManager.getInstance().getCurrentUser(new AuthenticationManager.OnUserCallbackListener() {
