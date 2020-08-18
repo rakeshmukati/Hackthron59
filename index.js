@@ -153,6 +153,10 @@ router.delete("/donatedItems", authenticate, (req, res) => {
     db.collection("donatedItem").deleteOne({
         _id: req.body.ID
     })
+    res.send(JSON.stringify({
+        status: 200,
+        message: "item removed."
+    }))
 })
 
 router.post("/donorInfo", authenticate, (req, res) => {
