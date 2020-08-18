@@ -240,13 +240,13 @@ router.get("/postUser", authenticate, (req, res) => {
     });
 })
 
-router.get("/needyPersons", authenticate, (req, res) => {
+router.get("/needyPersons", (req, res) => {
     db.collection("needyPersons").find().toArray(function(err, docs) {
         res.send(JSON.stringify(docs))
     });
 })
 
-router.put("/needyPersons", authenticate, (req, res) => {
+router.put("/needyPersons", (req, res) => {
     console.log("add Needy " + req.body)
     db.collection("needyPersons").insertOne(
         req.body
