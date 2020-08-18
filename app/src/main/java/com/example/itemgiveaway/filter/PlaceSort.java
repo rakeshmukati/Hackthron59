@@ -14,14 +14,18 @@ public class PlaceSort implements Comparator<ModelBase> {
 
     @Override
     public int compare(final ModelBase place1, final ModelBase place2) {
-        double lat1 = place1.getLatLng().latitude;
-        double lon1 = place1.getLatLng().longitude;
-        double lat2 = place2.getLatLng().latitude;
-        double lon2 = place2.getLatLng().longitude;
+        try {
+            double lat1 = place1.getLatLng().latitude;
+            double lon1 = place1.getLatLng().longitude;
+            double lat2 = place2.getLatLng().latitude;
+            double lon2 = place2.getLatLng().longitude;
+            double distanceToPlace1 = distance(currentLoc.latitude, currentLoc.longitude, lat1, lon1);
+            double distanceToPlace2 = distance(currentLoc.latitude, currentLoc.longitude, lat2, lon2);
+            return (int) (distanceToPlace1 - distanceToPlace2);
+        }catch (Exception e){
+            return 0;
+        }
 
-        double distanceToPlace1 = distance(currentLoc.latitude, currentLoc.longitude, lat1, lon1);
-        double distanceToPlace2 = distance(currentLoc.latitude, currentLoc.longitude, lat2, lon2);
-        return (int) (distanceToPlace1 - distanceToPlace2);
     }
 
     public double distance(double fromLat, double fromLon, double toLat, double toLon) {
