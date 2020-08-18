@@ -13,7 +13,6 @@ import com.example.itemgiveaway.interfaces.OnFailedListener;
 import com.example.itemgiveaway.interfaces.OnSuccessListener;
 import com.example.itemgiveaway.model.Item;
 import com.example.itemgiveaway.model.User;
-import com.example.itemgiveaway.services.LocationService;
 import com.example.itemgiveaway.utils.AuthenticationManager;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -31,7 +30,8 @@ import static com.example.itemgiveaway.MyRequestQueue.BASE_URL;
 public class DonationItemController {
     private static final String TAG = DonationItemController.class.getSimpleName();
     private static DonationItemController controller = null;
-    private ArrayList<Item> items = null;
+    private ArrayList<Item> items = new ArrayList<>();
+
     private Gson gson = new GsonBuilder().create();
 
     private DonationItemController() {
@@ -45,50 +45,50 @@ public class DonationItemController {
         return controller;
     }
 
+    public void getListFromServer(final OnDonatedItemListPreparesListener onDonatedItemListPreparesListener, boolean useCache) {
+        if (items.size() == 0 || !useCache) {
+            StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
+                    BASE_URL + "donatedItems",
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(final String response) {
+                            Log.d(TAG, response);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        items.clear();
+                                        JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
+                                        for (int i = 0; i < jsonElements.size(); i++) {
+                                            items.add(gson.fromJson(jsonElements.get(i), Item.class));
+                                        }
+                                        Location location = locationService.getLocation();
+                                        FilterListByLocation filterListByLocation = new FilterListByLocation(new LatLng(location.getLatitude(), location.getLongitude()), items);
+                                        onDonatedItemListPreparesListener.onItemListPrepared((ArrayList<Item>) filterListByLocation.getList());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
 
-    public void getDonatedItemList(final OnDonatedItemListPreparesListener onDonatedItemListPreparesListener) {
-        if (items == null) {
-            getListFromServer(onDonatedItemListPreparesListener);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
+                    return params;
+                }
+            };
+            MyRequestQueue.getInstance().addRequest(stringRequest);
         } else {
             onDonatedItemListPreparesListener.onItemListPrepared(items);
         }
-    }
-
-    public void getNewList(final OnDonatedItemListPreparesListener onDonatedItemListPreparesListener){
-        getListFromServer(onDonatedItemListPreparesListener);
-    }
-    public void getListFromServer(final OnDonatedItemListPreparesListener onDonatedItemListPreparesListener) {
-        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
-                BASE_URL + "donatedItems",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d(TAG, response);
-                        try {
-                            items = new ArrayList<>();
-                            JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
-                            for (int i = 0; i < jsonElements.size(); i++) {
-                                items.add(gson.fromJson(jsonElements.get(i), Item.class));
-                            }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
-                return params;
-            }
-        };
-        MyRequestQueue.getInstance().addRequest(stringRequest);
 
     }
 
@@ -174,11 +174,11 @@ public class DonationItemController {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        JsonObject res = gson.fromJson(response,JsonObject.class);
-                        if (res.get("status").getAsInt()==200){
+                        JsonObject res = gson.fromJson(response, JsonObject.class);
+                        if (res.get("status").getAsInt() == 200) {
                             items.remove(item);
                             onSuccessListener.onSuccess(item);
-                        }else {
+                        } else {
                             onFailedListener.onFailed(res.get("message").getAsString());
                         }
                     }

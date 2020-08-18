@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class Post {
     @SerializedName("_id")
     private String id;
-    private String email,title,description,text;
+    private String email, title, description, text;
     private String picture;
 
 

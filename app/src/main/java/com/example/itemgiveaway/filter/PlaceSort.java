@@ -1,11 +1,11 @@
 package com.example.itemgiveaway.filter;
 
-import com.example.itemgiveaway.model.NeedyItem;
+import com.example.itemgiveaway.model.ModelBase;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Comparator;
 
-public class PlaceSort implements Comparator<NeedyItem> {
+public class PlaceSort implements Comparator<ModelBase> {
     LatLng currentLoc;
 
     public PlaceSort(LatLng latLng) {
@@ -13,7 +13,7 @@ public class PlaceSort implements Comparator<NeedyItem> {
     }
 
     @Override
-    public int compare(final NeedyItem place1, final NeedyItem place2) {
+    public int compare(final ModelBase place1, final ModelBase place2) {
         double lat1 = place1.getLatLng().latitude;
         double lon1 = place1.getLatLng().longitude;
         double lat2 = place2.getLatLng().latitude;

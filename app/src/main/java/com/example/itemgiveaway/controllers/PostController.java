@@ -23,7 +23,7 @@ import java.util.Map;
 import static com.example.itemgiveaway.MyRequestQueue.BASE_URL;
 
 public class PostController {
-    private static final String TAG = DonationItemController.class.getSimpleName();
+    private static final String TAG = PostController.class.getSimpleName();
     private static PostController controller = null;
     private ArrayList<Post> posts = null;
     private Gson gson = new GsonBuilder().create();
@@ -87,7 +87,8 @@ public class PostController {
                         public void onResponse(String response) {
                             Log.d(TAG,"==================================="+ response);
                             try {
-                                posts = new ArrayList<>();
+                                if (posts==null) posts = new ArrayList<>();
+                                posts.clear();
                                 JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
                                 for (int i = 0; i < jsonElements.size(); i++) {
                                     posts.add(gson.fromJson(jsonElements.get(i), Post.class));
@@ -110,12 +111,14 @@ public class PostController {
                     params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
                     return params;
                 }
+
             };
             MyRequestQueue.getInstance().addRequest(stringRequest);
         } else {
             onSuccessListener.onSuccess(posts);
         }
     }
+
     public void deletePost(final Post post, final OnSuccessListener<Post> onSuccessListener, final OnFailedListener<String> onFailedListener) {
         StringRequest stringRequest = new StringRequest(StringRequest.Method.DELETE,
                 BASE_URL + "postUser",

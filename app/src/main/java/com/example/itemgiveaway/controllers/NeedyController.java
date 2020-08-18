@@ -6,19 +6,20 @@ import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.example.itemgiveaway.App;
 import com.example.itemgiveaway.MyRequestQueue;
 import com.example.itemgiveaway.filter.FilterListByLocation;
 import com.example.itemgiveaway.interfaces.OnFailedListener;
 import com.example.itemgiveaway.interfaces.OnSuccessListener;
 import com.example.itemgiveaway.model.NeedyItem;
-import com.example.itemgiveaway.services.LocationService;
+import com.example.itemgiveaway.utils.AuthenticationManager;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.example.itemgiveaway.App.locationService;
 import static com.example.itemgiveaway.MyRequestQueue.BASE_URL;
@@ -26,7 +27,8 @@ import static com.example.itemgiveaway.MyRequestQueue.BASE_URL;
 public class NeedyController {
     private static final String TAG = NeedyController.class.getSimpleName();
     private static NeedyController controller = null;
-    private ArrayList<NeedyItem> items = null;
+    private ArrayList<NeedyItem> items = new ArrayList<>();
+
     public NeedyController() {
     }
 
@@ -38,20 +40,19 @@ public class NeedyController {
     }
 
     public void getNeedyPersonList(final OnNeedyPersonListPreparesListener onNeedyPersonListPreparesListener) {
-        if(items==null){
+        if (items.size() == 0) {
             getListFromServer(onNeedyPersonListPreparesListener);
-        }
-        else {
+        } else {
             onNeedyPersonListPreparesListener.onNeedyItemListPrepared(items);
         }
     }
 
-    public void getNewList(final OnNeedyPersonListPreparesListener onNeedyPersonListPreparesListener){
+    public void getNewList(final OnNeedyPersonListPreparesListener onNeedyPersonListPreparesListener) {
         getListFromServer(onNeedyPersonListPreparesListener);
     }
 
-    public void getListFromServer(final OnNeedyPersonListPreparesListener onNeedyPersonListPreparesListener){
-
+    public void getListFromServer(final OnNeedyPersonListPreparesListener onNeedyPersonListPreparesListener) {
+        Log.d(TAG, "getListFromServer");
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
                 BASE_URL + "needyPersons",
                 new Response.Listener<String>() {
@@ -63,14 +64,14 @@ public class NeedyController {
                             public void run() {
                                 try {
                                     Gson gson = new GsonBuilder().create();
-                                    items = new ArrayList<>();
+                                    items.clear();
                                     JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
                                     for (int i = 0; i < jsonElements.size(); i++) {
                                         items.add(gson.fromJson(jsonElements.get(i), NeedyItem.class));
                                     }
                                     Location location = locationService.getLocation();
                                     FilterListByLocation filterListByLocation = new FilterListByLocation(new LatLng(location.getLatitude(), location.getLongitude()), items);
-                                    onNeedyPersonListPreparesListener.onNeedyItemListPrepared(filterListByLocation.getList());
+                                    onNeedyPersonListPreparesListener.onNeedyItemListPrepared((ArrayList<NeedyItem>) filterListByLocation.getList());
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -83,6 +84,12 @@ public class NeedyController {
                     public void onErrorResponse(VolleyError error) {
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
+                return params;
+            }
         };
         MyRequestQueue.getInstance().addRequest(stringRequest);
     }
@@ -114,6 +121,12 @@ public class NeedyController {
                 return "application/json";
             }
 
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
+                return params;
+            }
         };
 
         MyRequestQueue.getInstance().addRequest(stringRequest);

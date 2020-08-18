@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class DonateItemAdapter extends RecyclerView.Adapter<DonateItemAdapter.MyViewHolder> {
     private final onDonatedItemSelectListener onDonatedItemSelectListener;
-    private final ArrayList<Item> items = new ArrayList<>();
+    private ArrayList<Item> items = new ArrayList<>();
 
     public DonateItemAdapter(DonateItemAdapter.onDonatedItemSelectListener onDonatedItemSelectListener) {
         this.onDonatedItemSelectListener = onDonatedItemSelectListener;
@@ -27,7 +27,7 @@ public class DonateItemAdapter extends RecyclerView.Adapter<DonateItemAdapter.My
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.donate_list_item,parent,false));
+        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.donate_list_item, parent, false));
     }
 
     @Override
@@ -55,28 +55,27 @@ public class DonateItemAdapter extends RecyclerView.Adapter<DonateItemAdapter.My
         return items.size();
     }
 
-    static class MyViewHolder extends RecyclerView.ViewHolder{
+    public void setItems(ArrayList<Item> items) {
+        this.items = items;
+        notifyDataSetChanged();
+    }
+
+    public interface onDonatedItemSelectListener {
+        void onItemSelected(Item item);
+
+        void onItemLongSelected(Item item);
+    }
+
+    static class MyViewHolder extends RecyclerView.ViewHolder {
         AppCompatImageView itemImage;
         CardView donateListItem;
         AppCompatTextView itemName;
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             itemImage = itemView.findViewById(R.id.image);
             itemName = itemView.findViewById(R.id.name);
             donateListItem = itemView.findViewById(R.id.donateListItem);
         }
-    }
-
-    public void setItems(ArrayList<Item> items) {
-        synchronized (this.items){
-            this.items.clear();
-            this.items.addAll(items);
-            notifyDataSetChanged();
-        }
-    }
-
-    public interface onDonatedItemSelectListener{
-        void onItemSelected(Item item);
-        void onItemLongSelected(Item item);
     }
 }

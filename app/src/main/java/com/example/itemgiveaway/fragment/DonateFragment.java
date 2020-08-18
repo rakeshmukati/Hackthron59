@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.itemgiveaway.App;
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.adapter.DonateItemAdapter;
 import com.example.itemgiveaway.controllers.CategoryController;
@@ -45,6 +47,7 @@ import com.example.itemgiveaway.model.Item;
 import com.example.itemgiveaway.model.User;
 import com.example.itemgiveaway.utils.AuthenticationManager;
 import com.example.itemgiveaway.utils.ImageUtils;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -79,14 +82,14 @@ public class DonateFragment extends Fragment implements DonationItemController.O
         donateList.setLayoutManager(new LinearLayoutManager(requireContext()));
         donateList.setItemAnimator(new DefaultItemAnimator());
         donateList.setAdapter(adapter);
-        controller.getDonatedItemList(this);
+        controller.getListFromServer(this,true);
 
         //set add button
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                controller.getNewList(DonateFragment.this);
+                controller.getListFromServer(DonateFragment.this,false);
 
                 // swipeRefreshLayout.setRefreshing(false);
             }
@@ -183,8 +186,9 @@ public class DonateFragment extends Fragment implements DonationItemController.O
                 controller.addItemForDonation(item, new OnSuccessListener<Item>() {
                     @Override
                     public void onSuccess(Item item) {
-                        controller.getDonatedItemList(DonateFragment.this);
+                        controller.getListFromServer(DonateFragment.this,true);
                         addDialog.cancel();
+                        adapter.notifyDataSetChanged();
                         Toast.makeText(requireContext(), "Item added", Toast.LENGTH_SHORT).show();
                     }
                 }, new OnFailedListener<String>() {
@@ -208,13 +212,23 @@ public class DonateFragment extends Fragment implements DonationItemController.O
                 item.setEmail(currentUser.getEmail());
             }
         });
+
+        Location location = App.locationService.getLocation();
+        if (location!=null){
+            item.setLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
+        }
     }
 
     @Override
-    public void onItemListPrepared(ArrayList<Item> items) {
-        adapter.setItems(items);
-        progressBar.setVisibility(View.GONE);
-        swipeRefreshLayout.setRefreshing(false);
+    public void onItemListPrepared(final ArrayList<Item> items) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.setItems(items);
+                progressBar.setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override

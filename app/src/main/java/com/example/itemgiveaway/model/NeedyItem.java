@@ -1,19 +1,7 @@
 package com.example.itemgiveaway.model;
 
-import com.google.android.gms.maps.model.LatLng;
-
-public class NeedyItem {
+public class NeedyItem extends ModelBase{
     private String name,phone,address,city,postcode,district,block,state,picture;
-    LatLng latLng;
-
-    public LatLng getLatLng() {
-        return latLng;
-    }
-
-    public void setLatLng(LatLng latLng) {
-        this.latLng = latLng;
-    }
-
     private int categoryId;
 
     public NeedyItem(String name, String phone, String address, String city, String postcode, String district, String block, String state,   int categoryId) {
