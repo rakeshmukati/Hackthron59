@@ -194,6 +194,25 @@ router.put("/donatedItem", authenticate, (req, res) => {
     })
 })
 
+//  authenticate user and remove post 
+router.delete("/postUser", authenticate, (req, res) => {
+    db.collection("postUser").deleteOne({
+        _id: ObjectId(req.body.ID)
+    }, function(err, result) {
+        if (err) {
+            res.send(JSON.stringify({
+                status: 403,
+                message: "failed to delete item."
+            }))
+        } else {
+            res.send(JSON.stringify({
+                status: 200,
+                message: "item removed."
+            }))
+        }
+    })
+})
+
 router.put("/postUser", authenticate, (req, res) => {
     console.log("add Post " + req.body)
 
