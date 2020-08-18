@@ -24,7 +24,6 @@ import static com.example.itemgiveaway.MyRequestQueue.BASE_URL;
 public class PostController {
     private static final String TAG = DonationItemController.class.getSimpleName();
     private static PostController controller = null;
-    private ArrayList<Category> categories = null;
     private ArrayList<Post> items = null;
     private Gson gson = new GsonBuilder().create();
 
@@ -101,7 +100,7 @@ public class PostController {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.d("TEST",error.getMessage());
+                            Log.d("TEST","error.getMessage()"+error.getMessage());
                         }
                     }) {
                 @Override

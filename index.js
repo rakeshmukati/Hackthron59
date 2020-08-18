@@ -149,7 +149,8 @@ router.get("/donatedItems", authenticate, (req, res) => {
     });
 })
 
-router.delete("/donatedItems", authenticate, (req, res) => {
+router.delete("/donatedItem", authenticate, (req, res) => {
+    console.log("delete donate item id = ", req.body.ID)
     db.collection("donatedItem").deleteOne({
         _id: req.body.ID
     })

@@ -141,6 +141,8 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
                     dialogTitle.setError("name require!");
                     return;
                 }
+                progressBar.setVisibility(View.VISIBLE);
+
                 if (value.equals("IMAGE")) {
                     post.setPicture(new ImageUtils().viewToString(dialogImage));
                 } else {
@@ -149,7 +151,6 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
 
                 post.setTitle(title);
                 post.setDescription(description);
-                progressBar.setVisibility(View.VISIBLE);
                 controller.addItemPost(post, new OnSuccessListener<Post>() {
                     @Override
                     public void onSuccess(Post post) {

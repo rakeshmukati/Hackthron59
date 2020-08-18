@@ -33,12 +33,6 @@
                 android:textSize="22sp"
                 android:textStyle="bold"
                 tools:ignore="NestedWeights" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end"
-                android:src="@drawable/ic_baseline_notifications_24" />
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatEditText

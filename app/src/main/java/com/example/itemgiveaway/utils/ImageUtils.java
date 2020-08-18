@@ -3,7 +3,10 @@ package com.example.itemgiveaway.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Base64;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 
 import java.io.ByteArrayOutputStream;
@@ -15,7 +18,7 @@ public class ImageUtils {
         Canvas canvas = new Canvas(bitmap);
         view.draw(canvas);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 50, bos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, bos);
         byte[] bytes = bos.toByteArray();
         res = Base64.encodeToString(bytes, 0, bytes.length, Base64.DEFAULT);
         return res;

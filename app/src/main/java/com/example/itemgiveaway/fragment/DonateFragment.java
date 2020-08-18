@@ -178,11 +178,11 @@ public class DonateFragment extends Fragment implements DonationItemController.O
                     pinCodeEdit.setError("name require!");
                     return;
                 }
+                progressBar.setVisibility(View.VISIBLE);
                 item.setItemName(itemName);
                 item.setPinCode(Long.parseLong(pincode));
                 item.setStreetAddress(street);
                 item.setPicture(new ImageUtils().viewToString(itemImage));
-                progressBar.setVisibility(View.VISIBLE);
                 controller.addItemForDonation(item, new OnSuccessListener<Item>() {
                     @Override
                     public void onSuccess(Item item) {
@@ -338,7 +338,5 @@ public class DonateFragment extends Fragment implements DonationItemController.O
                 dialog.cancel();
             }
         });
-
-
     }
 }
