@@ -18,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -29,7 +28,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.adapter.NeedyPersonAdapter;
 import com.example.itemgiveaway.controllers.CategoryController;
@@ -40,7 +38,6 @@ import com.example.itemgiveaway.model.Category;
 import com.example.itemgiveaway.model.NeedyItem;
 import com.example.itemgiveaway.utils.ImageUtils;
 import com.google.android.gms.maps.model.LatLng;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +47,6 @@ import java.util.Objects;
 import static com.example.itemgiveaway.App.locationService;
 
 public class NeedFragment extends Fragment implements NeedyController.OnNeedyPersonListPreparesListener {
-
     private NeedyController controller = NeedyController.getInstance();
     private NeedyPersonAdapter adapter;
     private AppCompatImageView itemImage = null;
@@ -89,6 +85,7 @@ public class NeedFragment extends Fragment implements NeedyController.OnNeedyPer
 
         progressBar = view.findViewById(R.id.progressBar);
         adapter = new NeedyPersonAdapter();
+
         swipeRefreshLayout=view.findViewById(R.id.refresh);
 
         RecyclerView needyList = view.findViewById(R.id.needyList);

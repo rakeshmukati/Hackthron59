@@ -1,5 +1,6 @@
 package com.example.itemgiveaway.controllers;
 
+import android.location.Location;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -8,12 +9,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.itemgiveaway.MyRequestQueue;
+import com.example.itemgiveaway.filter.FilterListByLocation;
 import com.example.itemgiveaway.interfaces.OnFailedListener;
 import com.example.itemgiveaway.interfaces.OnSuccessListener;
 import com.example.itemgiveaway.model.Category;
 import com.example.itemgiveaway.model.Item;
 import com.example.itemgiveaway.model.User;
+import com.example.itemgiveaway.services.LocationService;
 import com.example.itemgiveaway.utils.AuthenticationManager;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -22,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.itemgiveaway.App.locationService;
 import static com.example.itemgiveaway.MyRequestQueue.BASE_URL;
 
 public class DonationItemController {
@@ -66,7 +71,7 @@ public class DonationItemController {
                             for (int i = 0; i < jsonElements.size(); i++) {
                                 items.add(gson.fromJson(jsonElements.get(i), Item.class));
                             }
-                            onDonatedItemListPreparesListener.onItemListPrepared(items);
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

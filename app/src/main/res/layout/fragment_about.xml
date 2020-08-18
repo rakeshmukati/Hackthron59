@@ -13,26 +13,26 @@
         android:layout_height="wrap_content"
         android:text="About Us"
         android:layout_marginTop="10dp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/colorAccent"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/black"
         android:text="Item Giveaway app aims to bring donor and needy at one platform. It provides option to the user that He can search for items based on type or location and It will enable donor to donate items directly to needy.Item Giveaway app can be used by Government, NGO\'s, Trust to manage their donation related activities."
        />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:textColor="@color/new_color"
+        android:textColor="@color/black"
         android:text="We promise:\n\n• An easy and best user experience.\n• A safe and secure process.\n• A hassle-free online experience.\n• And a totally satisfied you, who'll want to come back to us\tagain and again."
         />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:textColor="#5BF608"
+        android:textColor="@color/black"
         android:text="After all, you know it\'s an application which will provide self reliance to India and do not have to depend on others."
         />
     <LinearLayout

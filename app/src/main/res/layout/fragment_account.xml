@@ -51,7 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
-                android:drawableStart="@drawable/ic_baseline_phone_24"
+                android:drawableStart="@drawable/ic_pin"
                 android:hint="@string/enter_pin_code"
                 android:inputType="number" />
 
@@ -60,8 +60,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
-                android:drawableStart="@drawable/ic_baseline_phone_24"
-                android:hint="@string/enter_street_address" />
+                android:drawableStart="@drawable/ic_place"
+                android:hint= "@string/enter_street_address" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnUpdateProfile"
