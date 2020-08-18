@@ -1,5 +1,6 @@
 package com.example.itemgiveaway.controllers;
 
+import android.location.Location;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -7,10 +8,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.itemgiveaway.MyRequestQueue;
+import com.example.itemgiveaway.filter.FilterListByLocation;
 import com.example.itemgiveaway.interfaces.OnFailedListener;
 import com.example.itemgiveaway.interfaces.OnSuccessListener;
 import com.example.itemgiveaway.model.Post;
 import com.example.itemgiveaway.utils.AuthenticationManager;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -20,12 +23,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.itemgiveaway.App.locationService;
 import static com.example.itemgiveaway.MyRequestQueue.BASE_URL;
 
 public class PostController {
     private static final String TAG = PostController.class.getSimpleName();
     private static PostController controller = null;
-    private ArrayList<Post> posts = null;
+    private ArrayList<Post> posts = new ArrayList<>();
     private Gson gson = new GsonBuilder().create();
 
     private PostController() {
@@ -79,24 +83,30 @@ public class PostController {
     }
 
     public void getPost(final OnSuccessListener<ArrayList<Post>> onSuccessListener,boolean useCache) {
-        if (posts == null||!useCache) {
+        if (posts.size() == 0||!useCache) {
             StringRequest stringRequest = new StringRequest(StringRequest.Method.GET,
                     BASE_URL + "postUser",
                     new Response.Listener<String>() {
                         @Override
-                        public void onResponse(String response) {
+                        public void onResponse(final String response) {
                             Log.d(TAG,"==================================="+ response);
-                            try {
-                                if (posts==null) posts = new ArrayList<>();
-                                posts.clear();
-                                JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
-                                for (int i = 0; i < jsonElements.size(); i++) {
-                                    posts.add(gson.fromJson(jsonElements.get(i), Post.class));
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        posts.clear();
+                                        JsonArray jsonElements = gson.fromJson(response, JsonArray.class);
+                                        for (int i = 0; i < jsonElements.size(); i++) {
+                                            posts.add(gson.fromJson(jsonElements.get(i), Post.class));
+                                        }
+                                        Location location = locationService.getLocation();
+                                        FilterListByLocation filterListByLocation = new FilterListByLocation(new LatLng(location.getLatitude(), location.getLongitude()), posts);
+                                        onSuccessListener.onSuccess((ArrayList<Post>) filterListByLocation.getList());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 }
-                                onSuccessListener.onSuccess(posts);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            }).start();
                         }
                     },
                     new Response.ErrorListener() {

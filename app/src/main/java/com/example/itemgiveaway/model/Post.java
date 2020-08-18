@@ -2,7 +2,7 @@ package com.example.itemgiveaway.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Post {
+public class Post extends ModelBase {
     @SerializedName("_id")
     private String id;
     private String email, title, description, text;

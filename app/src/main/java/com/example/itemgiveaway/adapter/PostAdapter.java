@@ -16,7 +16,7 @@ import com.example.itemgiveaway.utils.ImageUtils;
 import java.util.ArrayList;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> {
-    private final ArrayList<Post> posts = new ArrayList<>();
+    private ArrayList<Post> posts = new ArrayList<>();
     private ImageUtils imageUtils = new ImageUtils();
     private final OnPostAdapterListener onPostAdapterListener;
 
@@ -78,11 +78,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
     }
 
     public void setItems(ArrayList<Post> posts) {
-        synchronized (this.posts) {
-            this.posts.clear();
-            this.posts.addAll(posts);
-            notifyDataSetChanged();
-        }
+        this.posts = posts;
+        notifyDataSetChanged();
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {

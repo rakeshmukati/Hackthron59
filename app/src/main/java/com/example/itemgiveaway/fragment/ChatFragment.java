@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.itemgiveaway.App;
 import com.example.itemgiveaway.R;
 import com.example.itemgiveaway.adapter.PostAdapter;
 import com.example.itemgiveaway.controllers.PostController;
@@ -34,6 +36,7 @@ import com.example.itemgiveaway.model.Post;
 import com.example.itemgiveaway.model.User;
 import com.example.itemgiveaway.utils.AuthenticationManager;
 import com.example.itemgiveaway.utils.ImageUtils;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -166,6 +169,13 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
                         Toast.makeText(requireContext(), "failed to post", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+                Location location = App.locationService.getLocation();
+                if (location!=null){
+                    post.setLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
+                }else{
+                    post.setLatLng(new LatLng(0,0));
+                }
             }
         });
         AuthenticationManager.getInstance().getCurrentUser(new AuthenticationManager.OnUserCallbackListener() {
@@ -191,10 +201,15 @@ public class ChatFragment extends Fragment implements OnSuccessListener<ArrayLis
     }
 
     @Override
-    public void onSuccess(ArrayList<Post> posts) {
-        adapter.setItems(posts);
-        progressBar.setVisibility(View.GONE);
-        swipeRefreshLayout.setRefreshing(false);
+    public void onSuccess(final ArrayList<Post> posts) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.setItems(posts);
+                progressBar.setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
