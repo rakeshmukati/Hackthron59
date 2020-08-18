@@ -193,11 +193,6 @@ public class DonationItemController {
                 params.put("Authorization", "Bearer " + AuthenticationManager.getInstance().getAccessToken());
                 return params;
             }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json";
-            }
         };
 
         MyRequestQueue.getInstance().addRequest(stringRequest);
